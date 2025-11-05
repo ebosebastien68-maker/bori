@@ -1,0 +1,21 @@
+{
+  "name": "WorldConnect",
+  "short_name": "World Connect",
+  "description": "La plateforme disponible pour vos services Digitales",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007aff",
+  "icons": [
+    {
+      "src": "connect_pro.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "connect_pro.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
