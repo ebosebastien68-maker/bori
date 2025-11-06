@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion / Inscription</title>
+    <title>Portail Spirituel</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -13,28 +13,132 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 25%, #FF6347 50%, #FFD700 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(34, 139, 34, 0.3) 0%, transparent 50%);
+            animation: pulseAura 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulseAura {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
         }
 
         .container {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(139, 0, 0, 0.4),
+                        0 0 50px rgba(255, 215, 0, 0.3);
             overflow: hidden;
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
+            position: relative;
+            animation: floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .spiritual-header {
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spiritual-header::before {
+            content: '✧';
+            position: absolute;
+            font-size: 100px;
+            color: rgba(255, 215, 0, 0.2);
+            top: -20px;
+            left: -20px;
+            animation: rotate 20s linear infinite;
+        }
+
+        .spiritual-header::after {
+            content: '✧';
+            position: absolute;
+            font-size: 80px;
+            color: rgba(255, 192, 203, 0.2);
+            bottom: -10px;
+            right: -10px;
+            animation: rotate 15s linear infinite reverse;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spiritual-title {
+            color: #FFD700;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .spiritual-subtitle {
+            color: #FFF;
+            font-size: 14px;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
         }
 
         .tabs {
             display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(to right, #FFD700, #FF6347, #FFD700);
+            border-bottom: 3px solid #8B0000;
+            position: relative;
+        }
+
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 4px;
+            background: #8B0000;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
         }
 
         .tab {
@@ -42,234 +146,245 @@
             padding: 20px;
             text-align: center;
             cursor: pointer;
-            font-weight: 600;
-            color: #6c757d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            color: #8B0000;
+            transition: all 0.4s ease;
             font-size: 15px;
             position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-            background: white;
+            color: #FFF;
+            background: rgba(139, 0, 0, 0.3);
+            transform: scale(1.05);
         }
 
         .tab:hover:not(.active) {
-            color: #495057;
-            background: #f1f3f5;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
         }
 
         .form-container {
-            padding: 48px 40px;
+            padding: 50px 45px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 228, 196, 0.3));
         }
 
         .form-content {
             display: none;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: slideAndFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .form-content.active {
             display: block;
         }
 
-        @keyframes fadeIn {
+        @keyframes slideAndFade {
             from {
                 opacity: 0;
-                transform: translateY(15px);
+                transform: translateX(-30px) rotateY(-10deg);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0) rotateY(0);
             }
         }
 
         h2 {
-            color: #212529;
-            margin-bottom: 12px;
+            color: #8B0000;
+            margin-bottom: 15px;
             text-align: center;
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 30px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.3);
         }
 
         .subtitle {
             text-align: center;
-            color: #6c757d;
-            margin-bottom: 32px;
-            font-size: 14px;
-        }
-
-        .oauth-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-
-        .oauth-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 14px 20px;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            background: white;
+            color: #DC143C;
+            margin-bottom: 35px;
             font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #495057;
-        }
-
-        .oauth-btn:hover {
-            border-color: #dee2e6;
-            background: #f8f9fa;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .oauth-btn:active {
-            transform: translateY(0);
-        }
-
-        .oauth-btn svg {
-            width: 20px;
-            height: 20px;
+            font-style: italic;
         }
 
         .divider {
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 28px 0;
-            color: #adb5bd;
-            font-size: 13px;
-            font-weight: 500;
+            margin: 30px 0;
+            color: #8B0000;
+            font-size: 14px;
+            font-weight: 700;
         }
 
         .divider::before,
         .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 2px solid #FFD700;
         }
 
         .divider span {
-            padding: 0 16px;
+            padding: 0 20px;
+            background: linear-gradient(135deg, #8B0000, #DC143C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #495057;
-            font-weight: 600;
+            margin-bottom: 10px;
+            color: #8B0000;
+            font-weight: 700;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         input {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
+            padding: 16px 18px;
+            border: 3px solid #FFD700;
+            border-radius: 15px;
             font-size: 15px;
-            transition: all 0.3s ease;
-            background: white;
+            transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: inherit;
         }
 
         input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #DC143C;
+            box-shadow: 0 0 0 6px rgba(220, 20, 60, 0.2),
+                        0 0 20px rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+            background: #FFF;
         }
 
         input::placeholder {
-            color: #adb5bd;
+            color: #CD5C5C;
+            font-style: italic;
         }
 
         .btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 18px;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF6347 100%);
+            background-size: 200% 100%;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 15px;
+            font-size: 17px;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.5s ease;
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4),
+                        0 0 30px rgba(255, 215, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            background-position: 100% 0;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(139, 0, 0, 0.6),
+                        0 0 40px rgba(255, 215, 0, 0.4);
         }
 
         .btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px) scale(0.98);
         }
 
         .btn:disabled {
-            background: linear-gradient(135deg, #adb5bd 0%, #868e96 100%);
+            background: linear-gradient(135deg, #808080 0%, #A9A9A9 100%);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
         .message {
-            padding: 14px 16px;
-            border-radius: 12px;
-            margin-bottom: 24px;
+            padding: 16px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
             text-align: center;
             display: none;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
+            animation: messageSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .message.error {
-            background: #fff5f5;
-            color: #e03131;
-            border: 2px solid #ffe3e3;
+            background: linear-gradient(135deg, #FF6347, #DC143C);
+            color: #FFF;
+            border: 3px solid #8B0000;
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
         }
 
         .message.success {
-            background: #f0fdf4;
-            color: #15803d;
-            border: 2px solid #dcfce7;
+            background: linear-gradient(135deg, #228B22, #32CD32);
+            color: #FFF;
+            border: 3px solid #006400;
+            box-shadow: 0 4px 15px rgba(34, 139, 34, 0.3);
         }
 
         .message.info {
-            background: #eff6ff;
-            color: #1e40af;
-            border: 2px solid #dbeafe;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #8B0000;
+            border: 3px solid #FF8C00;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
         .message.show {
             display: block;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .loader {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 40px;
         }
 
         .loader.show {
@@ -277,30 +392,38 @@
         }
 
         .spinner {
-            border: 3px solid #f1f3f5;
-            border-top: 3px solid #667eea;
+            border: 4px solid rgba(255, 215, 0, 0.3);
+            border-top: 4px solid #DC143C;
+            border-right: 4px solid #FFD700;
+            border-bottom: 4px solid #228B22;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 0.8s linear infinite;
+            width: 50px;
+            height: 50px;
+            animation: spinMulticolor 1s linear infinite;
             margin: 0 auto;
         }
 
-        @keyframes spin {
+        @keyframes spinMulticolor {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
         .loader-text {
-            margin-top: 16px;
-            color: #6c757d;
-            font-size: 14px;
-            font-weight: 500;
+            margin-top: 20px;
+            color: #8B0000;
+            font-size: 15px;
+            font-weight: 700;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .name-group {
             display: flex;
-            gap: 16px;
+            gap: 20px;
         }
 
         .name-group .input-group {
@@ -308,56 +431,71 @@
         }
 
         .info-text {
-            background: #f8f9fa;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            color: #495057;
+            background: linear-gradient(135deg, rgba(255, 192, 203, 0.3), rgba(255, 215, 0, 0.2));
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            color: #8B0000;
             font-size: 14px;
-            line-height: 1.6;
-            border: 1px solid #e9ecef;
+            line-height: 1.7;
+            border: 2px solid #FFD700;
+            font-style: italic;
         }
 
         .back-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .back-link a {
-            color: #667eea;
+            color: #DC143C;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
-            transition: color 0.2s ease;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
         }
 
         .back-link a:hover {
-            color: #764ba2;
-            text-decoration: underline;
+            color: #8B0000;
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateX(-5px);
         }
 
         @media (max-width: 480px) {
             .form-container {
-                padding: 32px 24px;
+                padding: 35px 25px;
             }
 
             h2 {
-                font-size: 24px;
+                font-size: 26px;
             }
 
             .name-group {
                 flex-direction: column;
-                gap: 20px;
+                gap: 25px;
+            }
+
+            .spiritual-title {
+                font-size: 26px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="spiritual-header">
+            <div class="spiritual-title">Secrets Ancestraux</div>
+            <div class="spiritual-subtitle">Le Portail de la Sagesse Spirituelle</div>
+        </div>
+
         <div class="tabs">
             <div class="tab active" data-tab="connexion">Connexion</div>
             <div class="tab" data-tab="inscription">Inscription</div>
-            <div class="tab" data-tab="reset">Mot de passe</div>
+            <div class="tab" data-tab="reset">Réinitialiser</div>
+            <div class="tab-indicator"></div>
         </div>
 
         <div class="form-container">
@@ -365,40 +503,24 @@
             
             <div id="loader" class="loader">
                 <div class="spinner"></div>
-                <p class="loader-text">Chargement en cours...</p>
+                <p class="loader-text">Connexion au royaume spirituel...</p>
             </div>
 
             <!-- Formulaire de Connexion -->
             <div id="connexion-form" class="form-content active">
-                <h2>Bon retour !</h2>
-                <p class="subtitle">Connectez-vous pour continuer</p>
+                <h2>Bienvenue</h2>
+                <p class="subtitle">Accédez aux enseignements sacrés</p>
                 
-                <div class="oauth-buttons">
-                    <button class="oauth-btn" onclick="signInWithGoogle()">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                        </svg>
-                        Continuer avec Google
-                    </button>
-                </div>
-
-                <div class="divider">
-                    <span>OU</span>
-                </div>
-
                 <form id="login-form">
                     <div class="input-group">
-                        <label for="login-email">Email</label>
-                        <input type="email" id="login-email" required placeholder="exemple@email.com">
+                        <label for="login-email">Email Sacré</label>
+                        <input type="email" id="login-email" required placeholder="votre@email.com">
                     </div>
                     <div class="input-group">
-                        <label for="login-password">Mot de passe</label>
+                        <label for="login-password">Mot de Passe Mystique</label>
                         <input type="password" id="login-password" required placeholder="••••••••">
                     </div>
-                    <button type="submit" class="btn">Se connecter</button>
+                    <button type="submit" class="btn"><span>Entrer dans le Sanctuaire</span></button>
                 </form>
                 <div class="back-link">
                     <a href="#" onclick="switchTab('reset'); return false;">Mot de passe oublié ?</a>
@@ -407,61 +529,45 @@
 
             <!-- Formulaire d'Inscription -->
             <div id="inscription-form" class="form-content">
-                <h2>Créer un compte</h2>
-                <p class="subtitle">Rejoignez-nous en quelques secondes</p>
+                <h2>Rejoignez-Nous</h2>
+                <p class="subtitle">Découvrez l'héritage de nos aïeux</p>
                 
-                <div class="oauth-buttons">
-                    <button class="oauth-btn" onclick="signInWithGoogle()">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                        </svg>
-                        Continuer avec Google
-                    </button>
-                </div>
-
-                <div class="divider">
-                    <span>OU</span>
-                </div>
-
                 <form id="signup-form">
                     <div class="name-group">
                         <div class="input-group">
                             <label for="signup-prenom">Prénom</label>
-                            <input type="text" id="signup-prenom" required placeholder="John">
+                            <input type="text" id="signup-prenom" required placeholder="Prénom">
                         </div>
                         <div class="input-group">
                             <label for="signup-nom">Nom</label>
-                            <input type="text" id="signup-nom" required placeholder="Doe">
+                            <input type="text" id="signup-nom" required placeholder="Nom">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="signup-email">Email</label>
-                        <input type="email" id="signup-email" required placeholder="exemple@email.com">
+                        <input type="email" id="signup-email" required placeholder="votre@email.com">
                     </div>
                     <div class="input-group">
-                        <label for="signup-password">Mot de passe</label>
+                        <label for="signup-password">Mot de Passe</label>
                         <input type="password" id="signup-password" required placeholder="••••••••" minlength="6">
                     </div>
-                    <button type="submit" class="btn">S'inscrire</button>
+                    <button type="submit" class="btn"><span>Commencer le Voyage</span></button>
                 </form>
             </div>
 
             <!-- Formulaire Mot de passe oublié -->
             <div id="reset-form" class="form-content">
-                <h2>Mot de passe oublié ?</h2>
-                <p class="subtitle">Pas de problème, nous allons vous aider</p>
+                <h2>Retrouvez Votre Chemin</h2>
+                <p class="subtitle">Récupération spirituelle</p>
                 <div class="info-text">
-                    Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                    Entrez votre adresse email et nous vous enverrons un lien sacré pour réinitialiser votre mot de passe et retrouver l'accès aux enseignements.
                 </div>
                 <form id="password-reset-form">
                     <div class="input-group">
                         <label for="reset-email">Email</label>
-                        <input type="email" id="reset-email" required placeholder="exemple@email.com">
+                        <input type="email" id="reset-email" required placeholder="votre@email.com">
                     </div>
-                    <button type="submit" class="btn">Envoyer le lien</button>
+                    <button type="submit" class="btn"><span>Envoyer le Lien Sacré</span></button>
                 </form>
                 <div class="back-link">
                     <a href="#" onclick="switchTab('connexion'); return false;">← Retour à la connexion</a>
@@ -478,6 +584,7 @@
             if (window.supabaseClient) {
                 ({ supabase, getCurrentUser, getUserProfile, redirectByRole } = window.supabaseClient);
                 checkIfLoggedIn();
+                updateTabIndicator();
             } else {
                 setTimeout(initializeApp, 100);
             }
@@ -492,7 +599,19 @@
 
         window.addEventListener('DOMContentLoaded', initializeApp);
 
-        // Gestion des onglets
+        function updateTabIndicator() {
+            const activeTab = document.querySelector('.tab.active');
+            const indicator = document.querySelector('.tab-indicator');
+            const tabs = document.querySelectorAll('.tab');
+            
+            if (activeTab && indicator) {
+                const index = Array.from(tabs).indexOf(activeTab);
+                const width = 100 / tabs.length;
+                indicator.style.width = width + '%';
+                indicator.style.left = (width * index) + '%';
+            }
+        }
+
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -511,6 +630,7 @@
             if (selectedTab) selectedTab.classList.add('active');
             if (selectedForm) selectedForm.classList.add('active');
             
+            updateTabIndicator();
             hideMessage();
         }
 
@@ -538,25 +658,6 @@
             }
         }
 
-        // Authentification Google
-        async function signInWithGoogle() {
-            try {
-                hideMessage();
-                const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        redirectTo: `${window.location.origin}/index.html`
-                    }
-                });
-
-                if (error) throw error;
-            } catch (error) {
-                console.error('Erreur Google:', error);
-                showMessage('Erreur lors de la connexion avec Google', 'error');
-            }
-        }
-
-        // Formulaire de connexion
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -579,7 +680,7 @@
                     throw new Error('Profil utilisateur introuvable. Contactez l\'administrateur.');
                 }
 
-                showMessage('Connexion réussie ! Redirection...', 'success');
+                showMessage('Connexion réussie ! Bienvenue dans le sanctuaire...', 'success');
                 
                 setTimeout(async () => {
                     await redirectByRole();
@@ -591,7 +692,6 @@
             }
         });
 
-        // Formulaire d'inscription
         document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -650,7 +750,6 @@
             }
         });
 
-        // Formulaire de réinitialisation
         document.getElementById('password-reset-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -677,4 +776,4 @@
         });
     </script>
 </body>
-                            </html>
+                </html>
