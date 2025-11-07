@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secret de nos Aïeux</title>
     
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff0000">
     
-    <!-- Scripts externes -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -21,24 +19,25 @@
         }
 
         :root {
-            --bg-primary: #f5f7fa;
+            --bg-primary: #fffdf7;
             --bg-secondary: #ffffff;
-            --text-primary: #333333;
-            --text-secondary: #666666;
-            --text-tertiary: #999999;
-            --border-color: #f0f0f0;
-            --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);
-            --shadow-md: 0 2px 15px rgba(0,0,0,0.1);
-            --shadow-lg: 0 4px 20px rgba(0,0,0,0.15);
+            --text-primary: #2d2d2d;
+            --text-secondary: #5a5a5a;
+            --text-tertiary: #8a8a8a;
+            --border-color: #ffe4b5;
+            --shadow-sm: 0 2px 10px rgba(255,215,0,0.15);
+            --shadow-md: 0 2px 15px rgba(255,215,0,0.2);
+            --shadow-lg: 0 4px 20px rgba(255,215,0,0.25);
             --navbar-height: 56px;
-            --accent-yellow: #FFD700;
-            --accent-green: #32CD32;
-            --accent-pink: #FF69B4;
+            --accent-yellow: #ffd700;
+            --accent-green: #32cd32;
+            --accent-pink: #ff69b4;
+            --header-red: #ff0000;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-primary);
+            background: linear-gradient(135deg, #fffdf7 0%, #fff8dc 100%);
             padding-top: var(--navbar-height);
             transition: background 0.3s ease, color 0.3s ease;
             overflow-x: hidden;
@@ -54,6 +53,7 @@
             --shadow-sm: 0 2px 10px rgba(0,0,0,0.3);
             --shadow-md: 0 2px 15px rgba(0,0,0,0.4);
             --shadow-lg: 0 4px 20px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         }
 
         .welcome-popup {
@@ -111,7 +111,7 @@
         }
 
         .welcome-popup-name {
-            color: white;
+            color: var(--accent-green);
             font-size: 36px;
             font-weight: 800;
             margin-bottom: 8px;
@@ -121,10 +121,10 @@
 
         @keyframes nameGlow {
             0%, 100% {
-                text-shadow: 0 3px 15px rgba(255, 255, 255, 0.4);
+                text-shadow: 0 3px 15px rgba(50, 205, 50, 0.4);
             }
             50% {
-                text-shadow: 0 3px 25px rgba(255, 255, 255, 0.8);
+                text-shadow: 0 3px 25px rgba(50, 205, 50, 0.8);
             }
         }
 
@@ -159,8 +159,8 @@
             left: 0;
             right: 0;
             height: var(--navbar-height);
-            background: #ff0000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: var(--header-red);
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
             padding: 0 12px;
             display: grid;
             grid-template-columns: auto 1fr auto;
@@ -168,6 +168,23 @@
             gap: 12px;
             z-index: 1000;
             overflow: visible;
+        }
+
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(255,255,255,0.1) 0%,
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 100%
+            );
+            pointer-events: none;
+            border-radius: inherit;
         }
 
         .navbar-left {
@@ -280,24 +297,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
             z-index: 1000;
             transition: all 0.3s ease;
         }
 
         .search-toggle-btn:hover {
-            background: #FFC700;
+            background: var(--accent-green);
             transform: translateX(-50%) translateY(2px);
         }
 
         .search-toggle-btn i {
             font-size: 16px;
-            color: #333333;
+            color: #000000;
             transition: transform 0.3s ease;
         }
 
         .search-toggle-btn.active i {
             transform: rotate(180deg);
+        }
+
+        body.dark-mode .search-toggle-btn {
+            background: var(--accent-pink);
+        }
+        
+        body.dark-mode .search-toggle-btn:hover {
+            background: var(--accent-green);
         }
 
         .search-panel {
@@ -307,8 +332,8 @@
             right: 0;
             height: 280px;
             background: var(--bg-secondary);
-            border-top: 3px solid var(--accent-green);
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            border-top: 3px solid var(--accent-yellow);
+            box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3);
             z-index: 998;
             transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             padding: 25px 20px;
@@ -331,7 +356,7 @@
         }
 
         .search-panel h3 i {
-            color: var(--accent-green);
+            color: var(--accent-yellow);
         }
 
         .search-input-container {
@@ -353,13 +378,13 @@
 
         .search-input:focus {
             outline: none;
-            border-color: var(--accent-green);
-            box-shadow: 0 0 0 3px rgba(50, 205, 50, 0.1);
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
         }
 
         .search-btn {
             padding: 15px 30px;
-            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-yellow) 100%);
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
             border: none;
             border-radius: 12px;
             color: white;
@@ -367,7 +392,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -375,7 +400,7 @@
 
         .search-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(50, 205, 50, 0.5);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
         }
 
         .view-more-btn {
@@ -388,7 +413,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -397,7 +422,7 @@
 
         .view-more-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
         }
 
         .search-results-info {
@@ -440,7 +465,7 @@
             padding: 2px 5px;
             font-size: 9px;
             font-weight: bold;
-            box-shadow: 0 2px 4px rgba(255, 105, 180, 0.4);
+            box-shadow: 0 2px 4px rgba(255, 105, 180, 0.5);
             animation: pulse 2s infinite;
             z-index: 10;
         }
@@ -496,7 +521,7 @@
         }
 
         .menu-item:hover {
-            background: rgba(50, 205, 50, 0.1);
+            background: rgba(255, 215, 0, 0.1);
             padding-left: 22px;
         }
 
@@ -571,12 +596,13 @@
             box-shadow: var(--shadow-sm);
             overflow: hidden;
             transition: all 0.3s ease;
-            border-left: 4px solid var(--accent-yellow);
+            border: 2px solid transparent;
         }
 
         .article-card:hover {
             box-shadow: var(--shadow-md);
             transform: translateY(-2px);
+            border-color: var(--accent-yellow);
         }
 
         .article-header {
@@ -591,7 +617,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 50%, var(--accent-pink) 100%);
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -684,7 +710,7 @@
         .link-btn {
             flex: 1;
             padding: 8px;
-            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-yellow) 100%);
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
             border: none;
             border-radius: 6px;
             cursor: pointer;
@@ -692,12 +718,12 @@
             font-weight: 600;
             color: white;
             transition: all 0.3s;
-            box-shadow: 0 2px 6px rgba(50, 205, 50, 0.3);
+            box-shadow: 0 2px 6px rgba(255, 215, 0, 0.4);
         }
 
         .link-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(50, 205, 50, 0.5);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
         }
 
         @keyframes reaction3DPop {
@@ -750,7 +776,7 @@
         }
 
         .reaction-btn:hover {
-            background: rgba(50, 205, 50, 0.08);
+            background: rgba(255, 215, 0, 0.1);
             transform: scale(1.15) translateZ(10px);
         }
 
@@ -770,7 +796,7 @@
         }
 
         .reaction-btn.active.love-active {
-            background: linear-gradient(135deg, var(--accent-pink) 0%, #ee5a6f 100%);
+            background: linear-gradient(135deg, var(--accent-pink) 0%, #ff1493 100%);
             color: white;
             box-shadow: 0 4px 15px rgba(255, 105, 180, 0.5);
             animation: colorPulse 2s ease-in-out infinite;
@@ -804,7 +830,7 @@
             flex: 1;
             padding: 15px;
             cursor: pointer;
-            color: var(--accent-green);
+            color: var(--accent-yellow);
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -817,11 +843,11 @@
         }
 
         .comments-toggle-large:hover {
-            background: rgba(50, 205, 50, 0.05);
+            background: rgba(255, 215, 0, 0.1);
         }
 
         .comment-count-badge {
-            background: var(--accent-green);
+            background: var(--accent-yellow);
             color: white;
             border-radius: 12px;
             padding: 2px 8px;
@@ -838,18 +864,18 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
-            background: rgba(50, 205, 50, 0.03);
+            background: rgba(255, 215, 0, 0.05);
             border-right: 1px solid var(--border-color);
             position: relative;
         }
 
         .share-btn:hover {
-            background: rgba(50, 205, 50, 0.1);
+            background: rgba(255, 215, 0, 0.15);
         }
 
         .share-btn i {
             font-size: 20px;
-            color: var(--accent-green);
+            color: var(--accent-yellow);
         }
 
         .share-menu {
@@ -936,7 +962,7 @@
         }
         .share-option.tiktok i { color: #000000; }
         body.dark-mode .share-option.tiktok i { color: #ffffff; }
-        .share-option.more i { color: var(--accent-green); }
+        .share-option.more i { color: var(--accent-yellow); }
 
         .user-reactions-btn {
             width: 60px;
@@ -946,16 +972,16 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
-            background: rgba(50, 205, 50, 0.03);
+            background: rgba(255, 215, 0, 0.05);
         }
 
         .user-reactions-btn:hover {
-            background: rgba(50, 205, 50, 0.1);
+            background: rgba(255, 215, 0, 0.15);
         }
 
         .user-reactions-btn i {
             font-size: 20px;
-            color: var(--accent-green);
+            color: var(--accent-yellow);
         }
 
         .comments-section {
@@ -974,7 +1000,7 @@
 
         .spinner {
             border: 3px solid var(--border-color);
-            border-top: 3px solid var(--accent-green);
+            border-top: 3px solid var(--accent-yellow);
             border-radius: 50%;
             width: 35px;
             height: 35px;
@@ -997,6 +1023,7 @@
             font-size: 50px;
             margin-bottom: 15px;
             opacity: 0.5;
+            color: var(--accent-yellow);
         }
 
         .page-iframe {
@@ -1044,7 +1071,7 @@
 
         .options-btn:hover {
             transform: scale(1.1);
-            background: #FF1493;
+            background: #ff1493;
         }
 
         .options-menu {
@@ -1078,7 +1105,7 @@
         }
 
         .options-menu a:hover {
-            background: rgba(50, 205, 50, 0.1);
+            background: rgba(255, 215, 0, 0.1);
         }
 
         .options-menu a.delete {
@@ -1484,63 +1511,102 @@
     
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker
-                    .register('./service-worker.js')
-                    .then(() => console.log('✅ Service Worker enregistré'))
-                    .catch(error => console.error('❌ Erreur Service Worker:', error));
-            });
-        }
-    </script>
-    
-    <script>
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
             window.addEventListener('load', async () => {
                 try {
-                    const registration = await navigator.serviceWorker.ready;
+                    const registration = await navigator.serviceWorker.register('./service-worker.js');
+                    console.log('✅ Service Worker enregistré:', registration);
                     
-                    const permission = await Notification.requestPermission();
-                    if (permission !== 'granted') {
-                        console.log('Permission de notification refusée');
-                        return;
-                    }
-
-                    const subscription = await registration.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: urlBase64ToUint8Array('BBy1JrSh6yhKisVG-ERzc0y2UIV6-InRBv9URfbyB7XYTxrin__362JOiKHFln1nICMRHD4jyzYu2HN3AOytQJ8')
-                    });
-
-                    const currentUser = await window.supabaseClient.getCurrentUser();
-                    if (currentUser) {
-                        const { error } = await window.supabaseClient.supabase
-                            .from('subscriptions')
-                            .upsert({
-                                user_id: currentUser.id,
-                                subscription: JSON.stringify(subscription),
-                                created_at: new Date().toISOString()
-                            }, { onConflict: 'user_id' });
-
-                        if (error) {
-                            console.error('Erreur enregistrement subscription:', error);
-                        } else {
-                            console.log('✅ Abonnement push enregistré');
+                    await navigator.serviceWorker.ready;
+                    
+                    if ('Notification' in window && 'PushManager' in window) {
+                        const permission = await Notification.requestPermission();
+                        
+                        if (permission === 'granted') {
+                            console.log('✅ Permission de notification accordée');
+                            await subscribeToPushNotifications(registration);
                         }
                     }
                 } catch (error) {
-                    console.error('Erreur notifications push:', error);
+                    console.error('❌ Erreur Service Worker:', error);
                 }
             });
         }
 
+        async function subscribeToPushNotifications(registration) {
+            try {
+                const vapidPublicKey = 'BBy1JrSh6yhKisVG-ERzc0y2UIV6-InRBv9URfbyB7XYTxrin__362JOiKHFln1nICMRHD4jyzYu2HN3AOytQJ8';
+                const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+                
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: convertedVapidKey
+                });
+                
+                console.log('✅ Abonnement push créé:', subscription);
+                await saveSubscriptionToDatabase(subscription);
+                
+            } catch (error) {
+                console.error('❌ Erreur abonnement push:', error);
+            }
+        }
+
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
-            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+            
             const rawData = window.atob(base64);
             const outputArray = new Uint8Array(rawData.length);
+            
             for (let i = 0; i < rawData.length; ++i) {
                 outputArray[i] = rawData.charCodeAt(i);
             }
             return outputArray;
+        }
+
+        async function saveSubscriptionToDatabase(subscription) {
+            try {
+                const { supabase, getCurrentUser } = window.supabaseClient;
+                const currentUser = await getCurrentUser();
+                
+                if (!currentUser) {
+                    console.log('⚠️ Utilisateur non connecté');
+                    return;
+                }
+                
+                const subscriptionData = {
+                    user_id: currentUser.id,
+                    endpoint: subscription.endpoint,
+                    p256dh_key: arrayBufferToBase64(subscription.getKey('p256dh')),
+                    auth_key: arrayBufferToBase64(subscription.getKey('auth')),
+                    user_agent: navigator.userAgent,
+                    created_at: new Date().toISOString()
+                };
+                
+                const { error } = await supabase
+                    .from('subscriptions')
+                    .upsert(subscriptionData, {
+                        onConflict: 'user_id,endpoint'
+                    });
+                
+                if (error) {
+                    console.error('❌ Erreur enregistrement abonnement:', error);
+                } else {
+                    console.log('✅ Abonnement enregistré');
+                }
+            } catch (error) {
+                console.error('❌ Erreur sauvegarde:', error);
+            }
+        }
+
+        function arrayBufferToBase64(buffer) {
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
         }
     </script>
     
@@ -1673,16 +1739,6 @@
                     try {
                         userProfile = await getUserProfile(currentUser.id);
                         
-                        if (!userProfile) {
-                            try {
-                                await createOAuthProfile(currentUser);
-                                userProfile = await getUserProfile(currentUser.id);
-                            } catch (profileError) {
-                                console.warn('Impossible de créer le profil:', profileError);
-                                userProfile = null;
-                            }
-                        }
-                        
                         if (userProfile) {
                             updateMenu();
                             showWelcomePopup();
@@ -1691,70 +1747,21 @@
                             setupRealTimeUpdates();
                             await loadUserReactions();
                         } else {
-                            console.warn('Profil utilisateur non disponible, continuant sans profil');
-                            updateMenu();
+                            console.warn('⚠️ Profil utilisateur introuvable, mode invité activé');
                         }
-                    } catch (userError) {
-                        console.warn('Erreur lors de la récupération du profil:', userError);
-                        userProfile = null;
-                        updateMenu();
+                    } catch (profileError) {
+                        console.warn('⚠️ Erreur récupération profil:', profileError);
+                        console.log('ℹ️ Continuité en mode sans profil');
                     }
                 }
             } catch (error) {
-                console.error('Erreur lors de l\'initialisation:', error);
+                console.error('⚠️ Erreur initialisation utilisateur:', error);
             }
             
+            // Charger les articles quoi qu'il arrive
             loadArticles();
             initNavigation();
         });
-
-        async function createOAuthProfile(user) {
-            try {
-                let prenom = 'Utilisateur';
-                let nom = 'Nouveau';
-
-                if (user.user_metadata) {
-                    if (user.user_metadata.full_name) {
-                        const nameParts = user.user_metadata.full_name.split(' ');
-                        prenom = nameParts[0] || 'Utilisateur';
-                        nom = nameParts.slice(1).join(' ') || 'Nouveau';
-                    } else if (user.user_metadata.name) {
-                        const nameParts = user.user_metadata.name.split(' ');
-                        prenom = nameParts[0] || 'Utilisateur';
-                        nom = nameParts.slice(1).join(' ') || 'Nouveau';
-                    } else if (user.user_metadata.given_name && user.user_metadata.family_name) {
-                        prenom = user.user_metadata.given_name;
-                        nom = user.user_metadata.family_name;
-                    }
-                }
-
-                if (prenom === 'Utilisateur' && nom === 'Nouveau' && user.email) {
-                    prenom = user.email.split('@')[0];
-                    nom = '';
-                }
-
-                const { data, error } = await supabase
-                    .from('users_profile')
-                    .insert({
-                        user_id: user.id,
-                        prenom: prenom,
-                        nom: nom,
-                        role: 'user'
-                    })
-                    .select()
-                    .single();
-
-                if (error && error.code !== '23505') {
-                    console.warn('Avertissement création profil:', error.message);
-                    return null;
-                }
-                
-                return data;
-            } catch (error) {
-                console.warn('Erreur lors de la création du profil:', error);
-                return null;
-            }
-        }
 
         function showWelcomePopup() {
             if (!userProfile) return;
@@ -1807,7 +1814,10 @@
         }
 
         async function loadUserReactions() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                console.log('ℹ️ Pas d\'utilisateur connecté, réactions non chargées');
+                return;
+            }
             try {
                 const { data, error } = await supabase
                     .from('article_reactions')
@@ -1815,21 +1825,20 @@
                     .eq('user_id', currentUser.id);
                 
                 if (error) {
-                    console.warn('Avertissement chargement réactions:', error);
+                    console.warn('⚠️ Erreur chargement réactions:', error);
                     return;
                 }
                 
                 userReactions = {};
-                if (data) {
-                    data.forEach(reaction => {
-                        if (!userReactions[reaction.article_id]) {
-                            userReactions[reaction.article_id] = [];
-                        }
-                        userReactions[reaction.article_id].push(reaction.reaction_type);
-                    });
-                }
+                data.forEach(reaction => {
+                    if (!userReactions[reaction.article_id]) {
+                        userReactions[reaction.article_id] = [];
+                    }
+                    userReactions[reaction.article_id].push(reaction.reaction_type);
+                });
+                console.log('✅ Réactions utilisateur chargées');
             } catch (error) {
-                console.warn('Erreur chargement réactions:', error);
+                console.warn('⚠️ Exception chargement réactions:', error);
             }
         }
 
@@ -1927,8 +1936,11 @@
         }
 
         function setupRealTimeUpdates() {
-            if (!currentUser) return;
-            
+            if (!currentUser) {
+                console.log('ℹ️ Pas de mises à jour temps réel sans utilisateur');
+                return;
+            }
+
             try {
                 supabase
                     .channel('articles-changes')
@@ -1937,7 +1949,7 @@
                         schema: 'public', 
                         table: 'articles' 
                     }, (payload) => {
-                        console.log('Article changé:', payload);
+                        console.log('🔔 Article changé:', payload);
                         loadArticles();
                     })
                     .subscribe();
@@ -1949,7 +1961,7 @@
                         schema: 'public', 
                         table: 'article_reactions' 
                     }, (payload) => {
-                        console.log('Réaction changée:', payload);
+                        console.log('🔔 Réaction changée:', payload);
                         loadUserReactions();
                         loadArticles();
                     })
@@ -1962,7 +1974,7 @@
                         schema: 'public', 
                         table: 'sessions_commentaires' 
                     }, (payload) => {
-                        console.log('Commentaire changé:', payload);
+                        console.log('🔔 Commentaire changé:', payload);
                         loadArticles();
                     })
                     .subscribe();
@@ -1975,7 +1987,7 @@
                         table: 'notifications',
                         filter: `user_id=eq.${currentUser.id}`
                     }, (payload) => {
-                        console.log('Nouvelle notification:', payload);
+                        console.log('🔔 Nouvelle notification:', payload);
                         loadNotificationCount();
                     })
                     .subscribe();
@@ -1988,12 +2000,14 @@
                         table: 'messages',
                         filter: `receiver_id=eq.${currentUser.id}`
                     }, (payload) => {
-                        console.log('Nouveau message:', payload);
+                        console.log('🔔 Nouveau message:', payload);
                         loadMessageCount();
                     })
                     .subscribe();
+                
+                console.log('✅ Mises à jour temps réel activées');
             } catch (error) {
-                console.warn('Erreur lors de la configuration des mises à jour en temps réel:', error);
+                console.warn('⚠️ Erreur configuration temps réel:', error);
             }
         }
 
@@ -2003,17 +2017,27 @@
                     .from('articles')
                     .select(`*, users_profile(prenom, nom), article_images(image_url), article_videos(video_url)`)
                     .order('date_created', { ascending: false });
-                if (error) throw error;
-                document.getElementById('loader').style.display = 'none';
-                if (!articles || articles.length === 0) {
-                    document.getElementById('empty-state').style.display = 'block';
+                
+                if (error) {
+                    console.warn('⚠️ Erreur chargement articles:', error);
+                    document.getElementById('loader').innerHTML = '<p style="color: #ff6b6b;">Erreur de chargement des articles</p>';
                     return;
                 }
+                
+                document.getElementById('loader').style.display = 'none';
+                
+                if (!articles || articles.length === 0) {
+                    document.getElementById('empty-state').style.display = 'block';
+                    console.log('ℹ️ Aucun article disponible');
+                    return;
+                }
+                
                 allArticles = articles;
                 displayArticles(articles);
+                console.log(`✅ ${articles.length} articles chargés avec succès`);
             } catch (error) {
-                console.error('Erreur:', error);
-                document.getElementById('loader').innerHTML = '<p style="color: red;">Erreur de chargement</p>';
+                console.error('❌ Exception chargement articles:', error);
+                document.getElementById('loader').innerHTML = '<p style="color: #ff6b6b;">Erreur critique de chargement</p>';
             }
         }
 
@@ -2262,24 +2286,30 @@
             if (confirmation) {
                 try {
                     const { error } = await supabase.from('articles').delete().eq('article_id', articleId);
-                    if (error) throw error;
+                    if (error) {
+                        console.warn('⚠️ Erreur suppression article:', error);
+                        alert("Erreur lors de la suppression de l'article.");
+                        return;
+                    }
+                    console.log('✅ Article supprimé avec succès');
                     alert("L'article a été supprimé avec succès.");
                     loadArticles();
                 } catch (error) {
-                    console.error("Erreur lors de la suppression:", error);
-                    alert("Une erreur s'est produite lors de la suppression de l'article.");
+                    console.error("❌ Exception suppression:", error);
+                    alert("Une erreur critique s'est produite.");
                 }
             }
         }
 
         async function handleReaction(articleId, reactionType) {
             if (!currentUser || !userProfile) {
+                console.log('⚠️ Connexion requise pour réagir');
                 alert('Connectez-vous pour réagir');
                 window.location.href = 'connexion.html';
                 return;
             }
             try {
-                const { data: existing } = await supabase
+                const { data: existing, error: selectError } = await supabase
                     .from('article_reactions')
                     .select('*')
                     .eq('article_id', articleId)
@@ -2287,17 +2317,30 @@
                     .eq('reaction_type', reactionType)
                     .single();
                 
+                if (selectError && selectError.code !== 'PGRST116') {
+                    console.warn('⚠️ Erreur vérification réaction:', selectError);
+                }
+                
                 if (existing) {
-                    await supabase
+                    const { error: deleteError } = await supabase
                         .from('article_reactions')
                         .delete()
                         .eq('reaction_id', existing.reaction_id);
                     
+                    if (deleteError) {
+                        console.warn('⚠️ Erreur suppression réaction:', deleteError);
+                        return;
+                    }
+                    
                     if (userReactions[articleId]) {
                         userReactions[articleId] = userReactions[articleId].filter(r => r !== reactionType);
                     }
+                    console.log(`✅ Réaction ${reactionType} retirée`);
+                    
+                    // Envoyer notification push de retrait
+                    await sendReactionNotification(articleId, reactionType, 'removed');
                 } else {
-                    await supabase
+                    const { error: insertError } = await supabase
                         .from('article_reactions')
                         .insert({ 
                             article_id: articleId, 
@@ -2305,15 +2348,69 @@
                             reaction_type: reactionType 
                         });
                     
+                    if (insertError) {
+                        console.warn('⚠️ Erreur ajout réaction:', insertError);
+                        return;
+                    }
+                    
                     if (!userReactions[articleId]) {
                         userReactions[articleId] = [];
                     }
                     userReactions[articleId].push(reactionType);
+                    console.log(`✅ Réaction ${reactionType} ajoutée`);
+                    
+                    // Envoyer notification push d'ajout
+                    await sendReactionNotification(articleId, reactionType, 'added');
                 }
                 
                 await loadArticles();
             } catch (error) {
-                console.error('Erreur réaction:', error);
+                console.error('❌ Exception réaction:', error);
+            }
+        }
+
+        async function sendReactionNotification(articleId, reactionType, action) {
+            try {
+                const article = allArticles.find(a => a.article_id === articleId);
+                if (!article) {
+                    console.warn('⚠️ Article introuvable pour notification');
+                    return;
+                }
+
+                const reactionEmojis = {
+                    'like': '👍',
+                    'love': '❤️',
+                    'rire': '😂',
+                    'colere': '😡'
+                };
+
+                const notificationData = {
+                    articleId: articleId,
+                    userId: currentUser.id,
+                    userName: `${userProfile.prenom} ${userProfile.nom}`,
+                    reactionType: reactionType,
+                    reactionEmoji: reactionEmojis[reactionType] || '👍',
+                    action: action,
+                    articlePreview: article.texte.substring(0, 100)
+                };
+
+                const response = await fetch('https://dyxncefogemtwgpmberd.supabase.co/functions/v1/send-push-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${supabase.auth.session()?.access_token || ''}`
+                    },
+                    body: JSON.stringify(notificationData)
+                });
+
+                if (response.ok) {
+                    console.log('✅ Notification push envoyée avec succès');
+                } else {
+                    const errorText = await response.text();
+                    console.warn('⚠️ Erreur envoi notification push:', errorText);
+                }
+            } catch (error) {
+                console.warn('⚠️ Exception envoi notification:', error);
             }
         }
 
@@ -2333,13 +2430,23 @@
                     .select(`*, users_profile(prenom, nom)`)
                     .eq('article_id', articleId)
                     .order('date_created', { ascending: false });
-                if (error) throw error;
+                
+                if (error) {
+                    console.warn('⚠️ Erreur chargement commentaires:', error);
+                    container.innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Erreur de chargement des commentaires</p>';
+                    return;
+                }
+                
                 if (window.CommentsWidget) {
                     window.CommentsWidget.render(container, articleId, comments, currentUser, userProfile);
+                    console.log(`✅ ${comments.length} commentaires chargés`);
+                } else {
+                    console.warn('⚠️ CommentsWidget non disponible');
+                    container.innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Widget de commentaires non chargé</p>';
                 }
             } catch (error) {
-                console.error('Erreur:', error);
-                container.innerHTML = '<p style="color: red; padding: 20px;">Erreur de chargement</p>';
+                console.error('❌ Exception chargement commentaires:', error);
+                container.innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Erreur critique</p>';
             }
         }
 
@@ -2368,50 +2475,62 @@
         window.shareToMore = shareToMore;
 
         async function loadNotificationCount() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                console.log('ℹ️ Pas de compteur notifications sans utilisateur');
+                return;
+            }
             try {
                 const { count, error } = await supabase
                     .from('notifications')
                     .select('*', { count: 'exact', head: true })
                     .eq('user_id', currentUser.id)
                     .eq('read_status', false);
+                
                 if (error) {
-                    console.warn('Avertissement notifications:', error);
+                    console.warn('⚠️ Erreur compteur notifications:', error);
                     return;
                 }
+                
                 const badge = document.getElementById('notif-badge');
                 if (count > 0) {
                     badge.textContent = count;
                     badge.style.display = 'block';
+                    console.log(`🔔 ${count} notifications non lues`);
                 } else {
                     badge.style.display = 'none';
                 }
             } catch (error) {
-                console.warn('Erreur notifications:', error);
+                console.warn('⚠️ Exception compteur notifications:', error);
             }
         }
 
         async function loadMessageCount() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                console.log('ℹ️ Pas de compteur messages sans utilisateur');
+                return;
+            }
             try {
                 const { count, error } = await supabase
                     .from('messages')
                     .select('*', { count: 'exact', head: true })
                     .eq('receiver_id', currentUser.id)
                     .eq('read_status', false);
+                
                 if (error) {
-                    console.warn('Avertissement messages:', error);
+                    console.warn('⚠️ Erreur compteur messages:', error);
                     return;
                 }
+                
                 const badge = document.getElementById('message-badge');
                 if (count > 0) {
                     badge.textContent = count;
                     badge.style.display = 'block';
+                    console.log(`💬 ${count} messages non lus`);
                 } else {
                     badge.style.display = 'none';
                 }
             } catch (error) {
-                console.warn('Erreur messages:', error);
+                console.warn('⚠️ Exception compteur messages:', error);
             }
         }
 
