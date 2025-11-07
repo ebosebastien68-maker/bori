@@ -1,143 +1,284 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Promouvoir plusieurs utilisateurs en admin</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Promouvoir plusieurs utilisateurs — Admin</title>
 <style>
-  :root {
-    --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#6ee7b7; --danger:#ff6b6b;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  }
-  body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;background:linear-gradient(180deg,#071023,#071829);color:#e6eef6;padding:24px;-webkit-font-smoothing:antialiased;}
-  .card{width:900px;max-width:96vw;background:var(--card);border-radius:16px;padding:22px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03);}
-  h1{margin:0 0 8px;font-size:20px}
-  p.lead{margin:0 0 18px;color:var(--muted);font-size:13px}
-  textarea{width:100%;background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);color:inherit;font-size:14px;resize:none;}
-  .btn{background:linear-gradient(90deg,#22c55e,#16a34a);color:#04121a;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600;display:inline-flex;gap:8px;align-items:center;user-select:none;}
-  .btn:disabled{opacity:0.5;cursor:default;}
-  .btn-danger{background:linear-gradient(90deg,#ff7b7b,#ff4d4d);color:#1f0f0f;}
-  table{width:100%;border-collapse:collapse;margin-top:14px;}
-  th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.1);text-align:left;}
-  th{color:var(--muted);}
-  .status{margin-top:14px;font-size:13px;min-height:20px;color:var(--muted);}
-  .success{color:var(--accent);font-weight:600;}
-  .error{color:var(--danger);font-weight:600;}
+  :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#6ee7b7;--danger:#ff6b6b;font-family:Inter,system-ui,Arial;}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071023,#071829);color:#e6eef6;display:flex;align-items:flex-start;justify-content:center;padding:28px}
+  .card{width:980px;max-width:98vw;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+  h1{margin:0 0 6px;font-size:20px}
+  p.lead{margin:0 0 14px;color:var(--muted);font-size:13px}
+  textarea{width:100%;min-height:92px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.02);color:inherit;font-size:14px;resize:vertical}
+  .controls{display:flex;gap:10px;margin-top:12px}
+  .btn{background:linear-gradient(90deg,#22c55e,#16a34a);color:#04121a;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+  .btn:disabled{opacity:0.5;cursor:default}
+  .btn-danger{background:linear-gradient(90deg,#ff7b7b,#ff4d4d);color:#1f0f0f}
+  .status{margin-top:12px;font-size:13px;color:var(--muted);min-height:22px}
+  table{width:100%;border-collapse:collapse;margin-top:12px;background:transparent}
+  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left;font-size:13px}
+  th{color:var(--muted);font-weight:600}
+  .log{margin-top:12px;background:rgba(0,0,0,0.35);padding:12px;border-radius:8px;color:#dbeafe;max-height:220px;overflow:auto;font-size:12px}
+  .small{font-size:12px;color:var(--muted)}
+  .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px;margin-left:8px}
 </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>Promouvoir plusieurs utilisateurs en admin</h1>
-  <p class="lead">Saisis une ou plusieurs emails (séparés par virgule ou retour à la ligne). Les utilisateurs trouvés seront listés et peuvent être promus en admin.</p>
+<div class="card" role="main" aria-labelledby="title">
+  <h1 id="title">Promouvoir plusieurs utilisateurs en admin <span class="pill">utilise window.supabaseClient.supabase</span></h1>
+  <p class="lead">Colle plusieurs emails (séparés par virgule ou saut de ligne). Le script cherchera le <code>user_id</code> dans <code>auth.users</code> puis mettra à jour <code>users_profile.role</code>. Logs détaillés affichés ci-dessous.</p>
 
-  <textarea id="emails" rows="4" placeholder="Ex : jean@example.com&#10;maria@example.com"></textarea>
-  <div style="margin-top:12px;">
+  <textarea id="emails" placeholder="ex: jean@example.com&#10;maria@example.com"></textarea>
+
+  <div class="controls">
     <button id="findBtn" class="btn">Rechercher</button>
-    <button id="promoteAllBtn" class="btn btn-danger" disabled>Promouvoir tous en admin</button>
+    <button id="promoteAllBtn" class="btn btn-danger" disabled>Promouvoir tous</button>
+    <button id="clearLogBtn" class="btn" title="Effacer la console">Effacer logs</button>
   </div>
 
-  <div class="status" id="status"></div>
+  <div class="status" id="status">Statut : prêt.</div>
 
-  <table id="userTable" style="display:none;margin-top:12px;">
+  <table id="userTable" style="display:none">
     <thead>
-      <tr>
-        <th>Email</th>
-        <th>User ID</th>
-        <th>Rôle actuel</th>
-        <th>Action</th>
-      </tr>
+      <tr><th>Email</th><th>User ID</th><th>Rôle actuel</th><th>Statut</th><th>Action</th></tr>
     </thead>
     <tbody></tbody>
   </table>
 
+  <div class="log" id="logConsole" aria-live="polite">Console prête. Ouvre la console navigateur (F12) pour plus de détails.</div>
+  <div style="margin-top:8px" class="small">Important : assure-toi que <code>supabaseClient.js</code> est chargé avant ce fichier et que RLS + policies admin sont configurés.</div>
 </div>
 
-<script type="module">
-import { supabase } from './supabaseClient.js';
+<!-- ATTENTION : inclure supabaseClient.js (qui place window.supabaseClient) AVANT ce script -->
+<script>
+(async function () {
+  const findBtn = document.getElementById('findBtn');
+  const promoteAllBtn = document.getElementById('promoteAllBtn');
+  const clearLogBtn = document.getElementById('clearLogBtn');
+  const emailsInput = document.getElementById('emails');
+  const userTable = document.getElementById('userTable');
+  const tbody = userTable.querySelector('tbody');
+  const statusEl = document.getElementById('status');
+  const logConsole = document.getElementById('logConsole');
 
-const emailsInput = document.getElementById('emails');
-const findBtn = document.getElementById('findBtn');
-const promoteAllBtn = document.getElementById('promoteAllBtn');
-const userTable = document.getElementById('userTable');
-const tbody = userTable.querySelector('tbody');
-const statusEl = document.getElementById('status');
+  function uiLog(...args){
+    const time = new Date().toLocaleTimeString();
+    const line = `[${time}] ${args.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ')}`;
+    logConsole.textContent = line + '\n' + logConsole.textContent;
+    console.log(...args);
+  }
 
-let usersList = []; // {email, id, role}
+  function setStatus(text, kind){
+    statusEl.textContent = 'Statut : ' + text;
+    statusEl.className = kind ? `status ${kind}` : 'status';
+    uiLog('STATUS', text);
+  }
 
-function setStatus(text, kind){ statusEl.textContent=text||''; statusEl.className=kind||''; }
+  function waitForSupabaseClient(timeoutMs = 3000) {
+    return new Promise((resolve) => {
+      if (window.supabaseClient && window.supabaseClient.supabase) return resolve(window.supabaseClient.supabase);
+      const start = Date.now();
+      const t = setInterval(() => {
+        if (window.supabaseClient && window.supabaseClient.supabase) {
+          clearInterval(t);
+          return resolve(window.supabaseClient.supabase);
+        }
+        if (Date.now() - start > timeoutMs) {
+          clearInterval(t);
+          return resolve(null);
+        }
+      }, 150);
+    });
+  }
 
-async function findUsers(){
-  let emails = emailsInput.value.split(/[\n,]+/).map(e=>e.trim()).filter(Boolean);
-  if(!emails.length){ setStatus('Renseigne au moins un e-mail.', 'error'); return; }
+  // récupérer le client supabase injecté par supabaseClient.js
+  const supabase = await waitForSupabaseClient();
+  if (!supabase) {
+    setStatus('Client Supabase introuvable (window.supabaseClient.supabase). Vérifie que supabaseClient.js est chargé.', 'error');
+    uiLog('ERREUR', 'window.supabaseClient.supabase non disponible.');
+    findBtn.disabled = true;
+    promoteAllBtn.disabled = true;
+    return;
+  }
+  uiLog('Client Supabase détecté.');
 
-  setStatus('Recherche en cours...', '');
-  tbody.innerHTML='';
-  usersList=[];
+  // utilitaires
+  function normalizeEmails(raw){
+    return raw.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean);
+  }
 
-  for(const email of emails){
+  async function fetchAuthUserByEmail(email){
     try{
-      const { data:user, error } = await supabase
+      const res = await supabase
         .from('auth.users')
-        .select('id, email')
+        .select('id,email')
         .eq('email', email)
-        .single();
-
-      if(error || !user){
-        tbody.innerHTML += `<tr><td>${email}</td><td>-</td><td>-</td><td style="color:var(--danger)">Non trouvé</td></tr>`;
-      } else {
-        const { data: profileData } = await supabase
-          .from('users_profile')
-          .select('role')
-          .eq('user_id', user.id)
-          .single();
-
-        const role = profileData?.role || 'user';
-        usersList.push({email:user.email,id:user.id,role});
-        tbody.innerHTML += `<tr>
-          <td>${user.email}</td>
-          <td>${user.id}</td>
-          <td>${role}</td>
-          <td><button class="btn btn-danger" data-id="${user.id}">Promouvoir</button></td>
-        </tr>`;
-      }
+        .maybeSingle(); // maybeSingle retourne null si non trouvé
+      uiLog('REQ auth.users', {email, res});
+      if (res.error) return { error: res.error };
+      return { data: res.data };
     }catch(err){
-      tbody.innerHTML += `<tr><td>${email}</td><td>-</td><td>-</td><td style="color:var(--danger)">Erreur</td></tr>`;
+      uiLog('ERR fetchAuthUserByEmail', err);
+      return { error: err };
     }
   }
 
-  userTable.style.display='table';
-  promoteAllBtn.disabled = usersList.length===0;
-
-  // ajouter événements boutons individuels
-  tbody.querySelectorAll('button[data-id]').forEach(btn=>{
-    btn.addEventListener('click', ()=>promoteUser(btn.dataset.id));
-  });
-}
-
-async function promoteUser(user_id){
-  if(!confirm('Promouvoir cet utilisateur en admin ?')) return;
-  try{
-    const { data, error } = await supabase
-      .from('users_profile')
-      .update({ role:'admin' })
-      .eq('user_id', user_id);
-    if(error){ setStatus('Erreur promotion.', 'error'); console.log(error); return; }
-    setStatus('Utilisateur promu avec succès.', 'success');
-    findUsers(); // rafraîchir la liste
-  }catch(err){ setStatus('Erreur.', 'error'); console.log(err); }
-}
-
-async function promoteAll(){
-  if(!confirm('Promouvoir tous les utilisateurs listés en admin ?')) return;
-  for(const user of usersList){
-    await promoteUser(user.id);
+  async function fetchProfileRole(user_id){
+    try{
+      const res = await supabase
+        .from('users_profile')
+        .select('role')
+        .eq('user_id', user_id)
+        .maybeSingle();
+      uiLog('REQ users_profile SELECT role', {user_id, res});
+      if (res.error) return { error: res.error };
+      return { data: res.data };
+    }catch(err){
+      uiLog('ERR fetchProfileRole', err);
+      return { error: err };
+    }
   }
-}
 
-findBtn.addEventListener('click', findUsers);
-promoteAllBtn.addEventListener('click', promoteAll);
+  async function updateRoleToAdmin(user_id){
+    try{
+      const res = await supabase
+        .from('users_profile')
+        .update({ role: 'admin' })
+        .eq('user_id', user_id);
+      uiLog('REQ users_profile UPDATE', {user_id, res});
+      // Cas RLS bloquant : supabase-js peut renvoyer {data: null, error: null}
+      if (!res.error && (res.data === null || (Array.isArray(res.data) && res.data.length === 0))) {
+        return { blockedByRLS: true, res };
+      }
+      if (res.error) return { error: res.error, res };
+      return { data: res.data, res };
+    }catch(err){
+      uiLog('ERR updateRoleToAdmin', err);
+      return { error: err };
+    }
+  }
+
+  function renderTable(users){
+    tbody.innerHTML = '';
+    users.forEach(u => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${u.email}</td>
+        <td>${u.id ?? '-'}</td>
+        <td>${u.role ?? '-'}</td>
+        <td>${u.statusText ?? '-'}</td>
+        <td>
+          ${u.id ? `<button class="promoteBtnBtn" data-id="${u.id}">Promouvoir</button>` : ''}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    userTable.style.display = users.length ? 'table' : 'none';
+
+    // bind buttons
+    tbody.querySelectorAll('.promoteBtnBtn').forEach(btn=>{
+      btn.addEventListener('click', async (e)=>{
+        const id = btn.dataset.id;
+        btn.disabled = true;
+        setStatus('Promotion en cours pour ' + id + ' ...');
+        uiLog('Action: promote single', id);
+        const r = await updateRoleToAdmin(id);
+        if (r.error) {
+          setStatus('Erreur lors de la mise à jour : ' + (r.error.message || r.error), 'error');
+          uiLog('UPDATE ERROR', r.error);
+        } else if (r.blockedByRLS) {
+          setStatus('Mise à jour bloquée par RLS (permissions).', 'error');
+          uiLog('UPDATE BLOQUED_BY_RLS', r.res);
+        } else {
+          setStatus('Utilisateur promu avec succès.', 'success');
+          uiLog('UPDATE SUCCESS', r.res);
+        }
+        // rafraîchir la ligne
+        const newRole = (r.data && Array.isArray(r.data) && r.data[0] && r.data[0].role) ? r.data[0].role : (r.blockedByRLS ? '(inchangé - RLS)' : 'admin');
+        const row = btn.closest('tr');
+        if (row) {
+          row.children[2].textContent = newRole;
+          row.children[3].textContent = r.error ? 'Erreur' : (r.blockedByRLS ? 'Bloqué RLS' : 'OK');
+        }
+        btn.disabled = false;
+      });
+    });
+  }
+
+  // main: recherche
+  findBtn.addEventListener('click', async ()=>{
+    const raw = emailsInput.value || '';
+    const emails = normalizeEmails(raw);
+    if (!emails.length) { setStatus('Aucun e-mail fourni.', 'error'); return; }
+    setStatus('Recherche de ' + emails.length + ' email(s)...');
+    uiLog('Recherche emails', emails);
+    promoteAllBtn.disabled = true;
+    tbody.innerHTML = '';
+    const found = [];
+
+    for (const email of emails) {
+      const authRes = await fetchAuthUserByEmail(email);
+      if (authRes.error) {
+        found.push({ email, id: null, role: null, statusText: 'Erreur lookup' });
+        uiLog('auth.users error', email, authRes.error);
+        continue;
+      }
+      const user = authRes.data;
+      if (!user) {
+        found.push({ email, id: null, role: null, statusText: 'Non trouvé' });
+        uiLog('auth.users non trouvé', email);
+        continue;
+      }
+
+      // chercher role dans users_profile
+      const profRes = await fetchProfileRole(user.id);
+      if (profRes.error) {
+        found.push({ email: user.email, id: user.id, role: null, statusText: 'Erreur profil' });
+        uiLog('users_profile lookup error', user.id, profRes.error);
+        continue;
+      }
+      const role = profRes.data?.role ?? '(aucun)';
+      found.push({ email: user.email, id: user.id, role, statusText: 'Trouvé' });
+    }
+
+    renderTable(found);
+    const promotable = found.filter(u => u.id);
+    promoteAllBtn.disabled = promotable.length === 0;
+    setStatus(`${found.length} résultat(s). ${promotable.length} prêt(s) à promouvoir.`);
+    uiLog('Recherche terminée', {found, promotableCount: promotable.length});
+  });
+
+  clearLogBtn.addEventListener('click', ()=>{ logConsole.textContent=''; uiLog('Logs effacés'); });
+
+  promoteAllBtn.addEventListener('click', async ()=>{
+    // collect ids
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const ids = rows.map(r => r.querySelector('button[data-id]')?.dataset.id).filter(Boolean);
+    if (!ids.length) { setStatus('Aucun utilisateur à promouvoir.', 'error'); return; }
+    if (!confirm('Promouvoir ' + ids.length + ' utilisateur(s) en admin ?')) return;
+    setStatus('Promotion en masse en cours...');
+    for (const id of ids) {
+      uiLog('Promouvoir (batch) :', id);
+      const r = await updateRoleToAdmin(id);
+      if (r.error) {
+        uiLog('BATCH UPDATE ERROR', id, r.error);
+      } else if (r.blockedByRLS) {
+        uiLog('BATCH UPDATE RLS BLOCK', id, r.res);
+      } else {
+        uiLog('BATCH UPDATE OK', id, r.res);
+      }
+      // petit délai pour éviter throttling (optionnel)
+      await new Promise(res => setTimeout(res, 200));
+    }
+    // rafraîchir la recherche actuelle pour mettre à jour rôles
+    findBtn.click();
+    setStatus('Promotion en masse terminée.');
+  });
+
+})();
 </script>
-
 </body>
 </html>
