@@ -9,6 +9,7 @@
   .card { max-width:900px; margin:auto; background:#0b1220; padding:20px; border-radius:10px; }
   textarea { width:100%; min-height:80px; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); background:#071829; color:inherit; margin-bottom:10px; }
   button { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; margin-right:5px; font-weight:600; }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
   .btn-promote { background:#22c55e; color:#04121a; }
   .btn-promote-all { background:#ff6b6b; color:#200; }
   table { width:100%; margin-top:12px; border-collapse:collapse; display:none; }
@@ -35,7 +36,6 @@
 </div>
 
 <script type="module">
-  // Vérifie que le client Supabase est chargé
   const supabase = window.supabaseClient?.supabase;
   if (!supabase) {
     console.error("Supabase client non disponible. Vérifiez que supabaseClient.js est chargé.");
@@ -47,6 +47,8 @@
   const tbl = document.getElementById('tbl');
   const tbody = tbl.querySelector('tbody');
   const logEl = document.getElementById('log');
+
+  let usersData = [];
 
   function uiLog(...args){
     const t = new Date().toLocaleTimeString();
@@ -69,19 +71,38 @@
     return { data, error };
   }
 
+  async function promoteUser(userId, rowIndex){
+    uiLog('Promotion de', userId);
+    const res = await updateRoleToAdmin(userId);
+    if(res.error) { 
+      uiLog('Erreur update', res.error); 
+      alert('Erreur: '+(res.error.message||res.error)); 
+      return false;
+    }
+    uiLog('Utilisateur promu', userId);
+    
+    const userIndex = usersData.findIndex(u => u.id === userId);
+    if(userIndex !== -1) usersData[userIndex].role = 'admin';
+    
+    const rows = tbody.querySelectorAll('tr');
+    if(rows[rowIndex]) {
+      rows[rowIndex].children[2].textContent = 'admin';
+      const btn = rows[rowIndex].querySelector('.prom');
+      if(btn) btn.disabled = true;
+    }
+    return true;
+  }
+
   function renderTable(users){
+    usersData = users;
     tbody.innerHTML = '';
-    users.forEach(u => {
+    users.forEach((u, idx) => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${u.email}</td><td>${u.id??'-'}</td><td>${u.role??'-'}</td><td>${u.id?'<button class="prom">Promouvoir</button>':'-'}</td>`;
+      tr.innerHTML = `<td>${u.email}</td><td>${u.id??'-'}</td><td>${u.role??'-'}</td><td>${u.id && u.role !== 'admin'?'<button class="prom">Promouvoir</button>':'-'}</td>`;
       tbody.appendChild(tr);
-      if(u.id){
+      if(u.id && u.role !== 'admin'){
         tr.querySelector('.prom').addEventListener('click', async () => {
-          uiLog('Promouvoir', u.id);
-          const res = await updateRoleToAdmin(u.id);
-          if(res.error) { uiLog('Erreur update', res.error); alert('Erreur: '+(res.error.message||res.error)); return; }
-          uiLog('Utilisateur promu', u.id);
-          tr.children[2].textContent = 'admin';
+          await promoteUser(u.id, idx);
         });
       }
     });
@@ -101,19 +122,27 @@
 
     renderTable(found);
     tbl.style.display = found.length ? 'table' : 'none';
-    promoteAllBtn.disabled = found.filter(f=>f.id).length === 0;
+    promoteAllBtn.disabled = found.filter(f=>f.id && f.role !== 'admin').length === 0;
   });
 
   promoteAllBtn.addEventListener('click', async () => {
-    const btns = Array.from(document.querySelectorAll('.prom'));
-    if(!btns.length) return;
-    if(!confirm(`Promouvoir ${btns.length} utilisateur(s) ?`)) return;
-    for(const b of btns){
-      b.disabled = true;
-      b.click();
+    const toPromote = usersData.filter(u => u.id && u.role !== 'admin');
+    if(!toPromote.length) return;
+    
+    if(!confirm(`Promouvoir ${toPromote.length} utilisateur(s) ?`)) return;
+    
+    promoteAllBtn.disabled = true;
+    uiLog(`Début de la promotion de ${toPromote.length} utilisateur(s)`);
+    
+    for(let i = 0; i < toPromote.length; i++){
+      const user = toPromote[i];
+      const rowIndex = usersData.findIndex(u => u.id === user.id);
+      await promoteUser(user.id, rowIndex);
       await new Promise(r=>setTimeout(r, 200));
-      b.disabled = false;
     }
+    
+    uiLog('Promotion de tous les utilisateurs terminée');
+    promoteAllBtn.disabled = true;
   });
 
   uiLog('Interface prête, vérifiez la console pour plus de détails.');
