@@ -118,6 +118,29 @@
             text-align: center;
         }
 
+        /* Nouveau bouton Admin bleu */
+        .admin-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+        }
+
         .logout-btn {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
@@ -853,7 +876,7 @@
                 gap: 8px;
             }
 
-            .logout-btn span {
+            .logout-btn span, .admin-btn span {
                 display: none;
             }
 
@@ -929,6 +952,10 @@
             <button class="icon-btn" onclick="refreshStats()" title="Actualiser">
                 <i class="fas fa-sync-alt"></i>
             </button>
+            <button class="admin-btn" onclick="window.location.href='admin.html'">
+                <i class="fas fa-cog"></i>
+                <span>Admin</span>
+            </button>
             <button class="logout-btn" onclick="handleLogout()">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Déconnexion</span>
@@ -955,24 +982,6 @@
 
         <!-- Stats -->
         <div class="stats-grid" id="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon primary">
-                    <i class="fas fa-newspaper"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 id="stat-articles">0</h3>
-                    <p>Articles publiés</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon success">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 id="stat-users">0</h3>
-                    <p>Utilisateurs actifs</p>
-                </div>
-            </div>
             <div class="stat-card">
                 <div class="stat-icon warning">
                     <i class="fas fa-bell"></i>
@@ -1017,7 +1026,9 @@
                         <textarea id="texte" required placeholder="Rédigez votre article ici... Soyez créatif ! ✨"></textarea>
                     </div>
 
-                    <div class="upload-section"><i class="fas fa-photo-video"></i>
+                    <div class="upload-section">
+                        <label>
+                            <i class="fas fa-photo-video"></i>
                             Médias (Images ou Vidéos)
                         </label>
                         
@@ -1663,4 +1674,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
