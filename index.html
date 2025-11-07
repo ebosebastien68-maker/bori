@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secret de nos Aïeux</title>
     
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff0000">
     
-    <!-- Scripts externes -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -58,7 +56,6 @@
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         }
 
-        /* Popup de bienvenue */
         .welcome-popup {
             position: fixed;
             top: 50%;
@@ -1389,7 +1386,6 @@
     </style>
 </head>
 <body>
-    <!-- Overlay et Popup de bienvenue -->
     <div class="welcome-popup-overlay" id="welcome-overlay"></div>
     <div class="welcome-popup" id="welcome-popup">
         <div class="welcome-popup-emoji">🎉</div>
@@ -1510,61 +1506,47 @@
         </div>
     </div>
 
-    <!-- Scripts externes -->
     <script src="supabaseClient.js"></script>
     <script src="commentaires.js"></script>
     
-    <!-- Service Worker pour PWA + Push Notifications -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', async () => {
                 try {
                     const registration = await navigator.serviceWorker.register('./service-worker.js');
-                    console.log('✅ Service Worker enregistré avec succès !', registration);
+                    console.log('✅ Service Worker enregistré:', registration);
                     
-                    // Attendre que le SW soit prêt
                     await navigator.serviceWorker.ready;
                     
-                    // Demander la permission de notifications
                     if ('Notification' in window && 'PushManager' in window) {
                         const permission = await Notification.requestPermission();
                         
                         if (permission === 'granted') {
                             console.log('✅ Permission de notification accordée');
-                            
-                            // Créer l'abonnement push
                             await subscribeToPushNotifications(registration);
-                        } else {
-                            console.log('❌ Permission de notification refusée');
                         }
                     }
                 } catch (error) {
-                    console.error('❌ Erreur lors de l\'enregistrement du Service Worker :', error);
+                    console.error('❌ Erreur Service Worker:', error);
                 }
             });
         }
 
         async function subscribeToPushNotifications(registration) {
             try {
-                // Clé publique VAPID
                 const vapidPublicKey = 'BBy1JrSh6yhKisVG-ERzc0y2UIV6-InRBv9URfbyB7XYTxrin__362JOiKHFln1nICMRHD4jyzYu2HN3AOytQJ8';
-                
-                // Convertir la clé publique en Uint8Array
                 const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
                 
-                // S'abonner aux notifications push
                 const subscription = await registration.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: convertedVapidKey
                 });
                 
                 console.log('✅ Abonnement push créé:', subscription);
-                
-                // Enregistrer l'abonnement dans Supabase
                 await saveSubscriptionToDatabase(subscription);
                 
             } catch (error) {
-                console.error('❌ Erreur lors de l\'abonnement push:', error);
+                console.error('❌ Erreur abonnement push:', error);
             }
         }
 
@@ -1585,16 +1567,14 @@
 
         async function saveSubscriptionToDatabase(subscription) {
             try {
-                // Récupérer l'utilisateur connecté
                 const { supabase, getCurrentUser } = window.supabaseClient;
                 const currentUser = await getCurrentUser();
                 
                 if (!currentUser) {
-                    console.log('⚠️ Utilisateur non connecté, abonnement non enregistré');
+                    console.log('⚠️ Utilisateur non connecté');
                     return;
                 }
                 
-                // Préparer les données
                 const subscriptionData = {
                     user_id: currentUser.id,
                     endpoint: subscription.endpoint,
@@ -1604,20 +1584,19 @@
                     created_at: new Date().toISOString()
                 };
                 
-                // Insérer dans Supabase (table: subscriptions)
-                const { data, error } = await supabase
+                const { error } = await supabase
                     .from('subscriptions')
                     .upsert(subscriptionData, {
                         onConflict: 'user_id,endpoint'
                     });
                 
                 if (error) {
-                    console.error('❌ Erreur lors de l\'enregistrement de l\'abonnement:', error);
+                    console.error('❌ Erreur enregistrement abonnement:', error);
                 } else {
-                    console.log('✅ Abonnement enregistré dans Supabase');
+                    console.log('✅ Abonnement enregistré');
                 }
             } catch (error) {
-                console.error('❌ Erreur lors de la sauvegarde:', error);
+                console.error('❌ Erreur sauvegarde:', error);
             }
         }
 
@@ -1631,7 +1610,6 @@
         }
     </script>
     
-    <!-- Script principal -->
     <script>
         const { supabase, getCurrentUser, getUserProfile } = window.supabaseClient;
         let currentUser = null;
@@ -1759,70 +1737,18 @@
             if (currentUser) {
                 userProfile = await getUserProfile(currentUser.id);
                 
-                if (!userProfile) {
-                    await createOAuthProfile(currentUser);
-                    userProfile = await getUserProfile(currentUser.id);
+                if (userProfile) {
+                    updateMenu();
+                    showWelcomePopup();
+                    loadNotificationCount();
+                    loadMessageCount();
+                    setupRealTimeUpdates();
+                    await loadUserReactions();
                 }
-                
-                updateMenu();
-                showWelcomePopup();
-                loadNotificationCount();
-                loadMessageCount();
-                setupRealTimeUpdates();
-                await loadUserReactions();
             }
             loadArticles();
             initNavigation();
         });
-
-        async function createOAuthProfile(user) {
-            try {
-                let prenom = 'Utilisateur';
-                let nom = 'Nouveau';
-
-                if (user.user_metadata) {
-                    if (user.user_metadata.full_name) {
-                        const nameParts = user.user_metadata.full_name.split(' ');
-                        prenom = nameParts[0] || 'Utilisateur';
-                        nom = nameParts.slice(1).join(' ') || 'Nouveau';
-                    } else if (user.user_metadata.name) {
-                        const nameParts = user.user_metadata.name.split(' ');
-                        prenom = nameParts[0] || 'Utilisateur';
-                        nom = nameParts.slice(1).join(' ') || 'Nouveau';
-                    } else if (user.user_metadata.given_name && user.user_metadata.family_name) {
-                        prenom = user.user_metadata.given_name;
-                        nom = user.user_metadata.family_name;
-                    }
-                }
-
-                if (prenom === 'Utilisateur' && nom === 'Nouveau' && user.email) {
-                    prenom = user.email.split('@')[0];
-                    nom = '';
-                }
-
-                const { data, error } = await supabase
-                    .from('users_profile')
-                    .insert({
-                        user_id: user.id,
-                        prenom: prenom,
-                        nom: nom,
-                        role: 'user'
-                    })
-                    .select()
-                    .single();
-
-                if (error) {
-                    console.error('Erreur création profil OAuth:', error);
-                    if (error.code !== '23505') {
-                        throw error;
-                    }
-                }
-
-                console.log('Profil OAuth créé avec succès:', data);
-            } catch (error) {
-                console.error('Erreur lors de la création du profil OAuth:', error);
-            }
-        }
 
         function showWelcomePopup() {
             if (!userProfile) return;
@@ -2068,7 +1994,8 @@
                 }
                 allArticles = articles;
                 displayArticles(articles);
-            } catch (error) 
+            } catch (error) {
+                console.error('Erreur:', error);
                 document.getElementById('loader').innerHTML = '<p style="color: red;">Erreur de chargement</p>';
             }
         }
