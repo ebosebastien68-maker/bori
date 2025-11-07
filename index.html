@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secret de nos Aïeux</title>
     
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff0000">
     
+    <!-- Scripts externes -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -19,25 +21,24 @@
         }
 
         :root {
-            --bg-primary: #fffdf7;
+            --bg-primary: #f5f7fa;
             --bg-secondary: #ffffff;
-            --text-primary: #2d2d2d;
-            --text-secondary: #5a5a5a;
-            --text-tertiary: #8a8a8a;
-            --border-color: #ffe4b5;
-            --shadow-sm: 0 2px 10px rgba(255,215,0,0.15);
-            --shadow-md: 0 2px 15px rgba(255,215,0,0.2);
-            --shadow-lg: 0 4px 20px rgba(255,215,0,0.25);
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border-color: #f0f0f0;
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);
+            --shadow-md: 0 2px 15px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.15);
             --navbar-height: 56px;
-            --accent-yellow: #ffd700;
-            --accent-green: #32cd32;
-            --accent-pink: #ff69b4;
-            --header-red: #ff0000;
+            --accent-yellow: #FFD700;
+            --accent-green: #32CD32;
+            --accent-pink: #FF69B4;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fffdf7 0%, #fff8dc 100%);
+            background: var(--bg-primary);
             padding-top: var(--navbar-height);
             transition: background 0.3s ease, color 0.3s ease;
             overflow-x: hidden;
@@ -53,7 +54,6 @@
             --shadow-sm: 0 2px 10px rgba(0,0,0,0.3);
             --shadow-md: 0 2px 15px rgba(0,0,0,0.4);
             --shadow-lg: 0 4px 20px rgba(0,0,0,0.5);
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         }
 
         .welcome-popup {
@@ -111,7 +111,7 @@
         }
 
         .welcome-popup-name {
-            color: var(--accent-green);
+            color: white;
             font-size: 36px;
             font-weight: 800;
             margin-bottom: 8px;
@@ -121,10 +121,10 @@
 
         @keyframes nameGlow {
             0%, 100% {
-                text-shadow: 0 3px 15px rgba(50, 205, 50, 0.4);
+                text-shadow: 0 3px 15px rgba(255, 255, 255, 0.4);
             }
             50% {
-                text-shadow: 0 3px 25px rgba(50, 205, 50, 0.8);
+                text-shadow: 0 3px 25px rgba(255, 255, 255, 0.8);
             }
         }
 
@@ -159,8 +159,8 @@
             left: 0;
             right: 0;
             height: var(--navbar-height);
-            background: var(--header-red);
-            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
+            background: #ff0000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             padding: 0 12px;
             display: grid;
             grid-template-columns: auto 1fr auto;
@@ -168,23 +168,6 @@
             gap: 12px;
             z-index: 1000;
             overflow: visible;
-        }
-
-        .navbar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                180deg,
-                rgba(255,255,255,0.1) 0%,
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.1) 100%
-            );
-            pointer-events: none;
-            border-radius: inherit;
         }
 
         .navbar-left {
@@ -297,32 +280,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
             z-index: 1000;
             transition: all 0.3s ease;
         }
 
         .search-toggle-btn:hover {
-            background: var(--accent-green);
+            background: #FFC700;
             transform: translateX(-50%) translateY(2px);
         }
 
         .search-toggle-btn i {
             font-size: 16px;
-            color: #000000;
+            color: #333333;
             transition: transform 0.3s ease;
         }
 
         .search-toggle-btn.active i {
             transform: rotate(180deg);
-        }
-
-        body.dark-mode .search-toggle-btn {
-            background: var(--accent-pink);
-        }
-        
-        body.dark-mode .search-toggle-btn:hover {
-            background: var(--accent-green);
         }
 
         .search-panel {
@@ -332,8 +307,8 @@
             right: 0;
             height: 280px;
             background: var(--bg-secondary);
-            border-top: 3px solid var(--accent-yellow);
-            box-shadow: 0 -4px 20px rgba(255, 215, 0, 0.3);
+            border-top: 3px solid var(--accent-green);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
             z-index: 998;
             transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             padding: 25px 20px;
@@ -356,7 +331,7 @@
         }
 
         .search-panel h3 i {
-            color: var(--accent-yellow);
+            color: var(--accent-green);
         }
 
         .search-input-container {
@@ -378,13 +353,13 @@
 
         .search-input:focus {
             outline: none;
-            border-color: var(--accent-yellow);
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(50, 205, 50, 0.1);
         }
 
         .search-btn {
             padding: 15px 30px;
-            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-yellow) 100%);
             border: none;
             border-radius: 12px;
             color: white;
@@ -392,7 +367,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -400,7 +375,7 @@
 
         .search-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 6px 20px rgba(50, 205, 50, 0.5);
         }
 
         .view-more-btn {
@@ -413,7 +388,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -422,7 +397,7 @@
 
         .view-more-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
         }
 
         .search-results-info {
@@ -465,7 +440,7 @@
             padding: 2px 5px;
             font-size: 9px;
             font-weight: bold;
-            box-shadow: 0 2px 4px rgba(255, 105, 180, 0.5);
+            box-shadow: 0 2px 4px rgba(255, 105, 180, 0.4);
             animation: pulse 2s infinite;
             z-index: 10;
         }
@@ -521,7 +496,7 @@
         }
 
         .menu-item:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(50, 205, 50, 0.1);
             padding-left: 22px;
         }
 
@@ -596,13 +571,12 @@
             box-shadow: var(--shadow-sm);
             overflow: hidden;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            border-left: 4px solid var(--accent-yellow);
         }
 
         .article-card:hover {
             box-shadow: var(--shadow-md);
             transform: translateY(-2px);
-            border-color: var(--accent-yellow);
         }
 
         .article-header {
@@ -617,7 +591,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 50%, var(--accent-pink) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -710,7 +684,7 @@
         .link-btn {
             flex: 1;
             padding: 8px;
-            background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-yellow) 100%);
             border: none;
             border-radius: 6px;
             cursor: pointer;
@@ -718,12 +692,12 @@
             font-weight: 600;
             color: white;
             transition: all 0.3s;
-            box-shadow: 0 2px 6px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 2px 6px rgba(50, 205, 50, 0.3);
         }
 
         .link-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 4px 12px rgba(50, 205, 50, 0.5);
         }
 
         @keyframes reaction3DPop {
@@ -776,7 +750,7 @@
         }
 
         .reaction-btn:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(50, 205, 50, 0.08);
             transform: scale(1.15) translateZ(10px);
         }
 
@@ -796,7 +770,7 @@
         }
 
         .reaction-btn.active.love-active {
-            background: linear-gradient(135deg, var(--accent-pink) 0%, #ff1493 100%);
+            background: linear-gradient(135deg, var(--accent-pink) 0%, #ee5a6f 100%);
             color: white;
             box-shadow: 0 4px 15px rgba(255, 105, 180, 0.5);
             animation: colorPulse 2s ease-in-out infinite;
@@ -830,7 +804,7 @@
             flex: 1;
             padding: 15px;
             cursor: pointer;
-            color: var(--accent-yellow);
+            color: var(--accent-green);
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -843,11 +817,11 @@
         }
 
         .comments-toggle-large:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(50, 205, 50, 0.05);
         }
 
         .comment-count-badge {
-            background: var(--accent-yellow);
+            background: var(--accent-green);
             color: white;
             border-radius: 12px;
             padding: 2px 8px;
@@ -864,18 +838,18 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
-            background: rgba(255, 215, 0, 0.05);
+            background: rgba(50, 205, 50, 0.03);
             border-right: 1px solid var(--border-color);
             position: relative;
         }
 
         .share-btn:hover {
-            background: rgba(255, 215, 0, 0.15);
+            background: rgba(50, 205, 50, 0.1);
         }
 
         .share-btn i {
             font-size: 20px;
-            color: var(--accent-yellow);
+            color: var(--accent-green);
         }
 
         .share-menu {
@@ -962,7 +936,7 @@
         }
         .share-option.tiktok i { color: #000000; }
         body.dark-mode .share-option.tiktok i { color: #ffffff; }
-        .share-option.more i { color: var(--accent-yellow); }
+        .share-option.more i { color: var(--accent-green); }
 
         .user-reactions-btn {
             width: 60px;
@@ -972,16 +946,16 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
-            background: rgba(255, 215, 0, 0.05);
+            background: rgba(50, 205, 50, 0.03);
         }
 
         .user-reactions-btn:hover {
-            background: rgba(255, 215, 0, 0.15);
+            background: rgba(50, 205, 50, 0.1);
         }
 
         .user-reactions-btn i {
             font-size: 20px;
-            color: var(--accent-yellow);
+            color: var(--accent-green);
         }
 
         .comments-section {
@@ -1000,7 +974,7 @@
 
         .spinner {
             border: 3px solid var(--border-color);
-            border-top: 3px solid var(--accent-yellow);
+            border-top: 3px solid var(--accent-green);
             border-radius: 50%;
             width: 35px;
             height: 35px;
@@ -1023,7 +997,6 @@
             font-size: 50px;
             margin-bottom: 15px;
             opacity: 0.5;
-            color: var(--accent-yellow);
         }
 
         .page-iframe {
@@ -1071,7 +1044,7 @@
 
         .options-btn:hover {
             transform: scale(1.1);
-            background: #ff1493;
+            background: #FF1493;
         }
 
         .options-menu {
@@ -1105,7 +1078,7 @@
         }
 
         .options-menu a:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(50, 205, 50, 0.1);
         }
 
         .options-menu a.delete {
@@ -1511,102 +1484,63 @@
     
     <script>
         if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker
+                    .register('./service-worker.js')
+                    .then(() => console.log('✅ Service Worker enregistré'))
+                    .catch(error => console.error('❌ Erreur Service Worker:', error));
+            });
+        }
+    </script>
+    
+    <script>
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
             window.addEventListener('load', async () => {
                 try {
-                    const registration = await navigator.serviceWorker.register('./service-worker.js');
-                    console.log('✅ Service Worker enregistré:', registration);
+                    const registration = await navigator.serviceWorker.ready;
                     
-                    await navigator.serviceWorker.ready;
-                    
-                    if ('Notification' in window && 'PushManager' in window) {
-                        const permission = await Notification.requestPermission();
-                        
-                        if (permission === 'granted') {
-                            console.log('✅ Permission de notification accordée');
-                            await subscribeToPushNotifications(registration);
+                    const permission = await Notification.requestPermission();
+                    if (permission !== 'granted') {
+                        console.log('Permission de notification refusée');
+                        return;
+                    }
+
+                    const subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array('BBy1JrSh6yhKisVG-ERzc0y2UIV6-InRBv9URfbyB7XYTxrin__362JOiKHFln1nICMRHD4jyzYu2HN3AOytQJ8')
+                    });
+
+                    const currentUser = await window.supabaseClient.getCurrentUser();
+                    if (currentUser) {
+                        const { error } = await window.supabaseClient.supabase
+                            .from('subscriptions')
+                            .upsert({
+                                user_id: currentUser.id,
+                                subscription: JSON.stringify(subscription),
+                                created_at: new Date().toISOString()
+                            }, { onConflict: 'user_id' });
+
+                        if (error) {
+                            console.error('Erreur enregistrement subscription:', error);
+                        } else {
+                            console.log('✅ Abonnement push enregistré');
                         }
                     }
                 } catch (error) {
-                    console.error('❌ Erreur Service Worker:', error);
+                    console.error('Erreur notifications push:', error);
                 }
             });
         }
 
-        async function subscribeToPushNotifications(registration) {
-            try {
-                const vapidPublicKey = 'BBy1JrSh6yhKisVG-ERzc0y2UIV6-InRBv9URfbyB7XYTxrin__362JOiKHFln1nICMRHD4jyzYu2HN3AOytQJ8';
-                const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-                
-                const subscription = await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: convertedVapidKey
-                });
-                
-                console.log('✅ Abonnement push créé:', subscription);
-                await saveSubscriptionToDatabase(subscription);
-                
-            } catch (error) {
-                console.error('❌ Erreur abonnement push:', error);
-            }
-        }
-
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
-            const base64 = (base64String + padding)
-                .replace(/\-/g, '+')
-                .replace(/_/g, '/');
-            
+            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
             const rawData = window.atob(base64);
             const outputArray = new Uint8Array(rawData.length);
-            
             for (let i = 0; i < rawData.length; ++i) {
                 outputArray[i] = rawData.charCodeAt(i);
             }
             return outputArray;
-        }
-
-        async function saveSubscriptionToDatabase(subscription) {
-            try {
-                const { supabase, getCurrentUser } = window.supabaseClient;
-                const currentUser = await getCurrentUser();
-                
-                if (!currentUser) {
-                    console.log('⚠️ Utilisateur non connecté');
-                    return;
-                }
-                
-                const subscriptionData = {
-                    user_id: currentUser.id,
-                    endpoint: subscription.endpoint,
-                    p256dh_key: arrayBufferToBase64(subscription.getKey('p256dh')),
-                    auth_key: arrayBufferToBase64(subscription.getKey('auth')),
-                    user_agent: navigator.userAgent,
-                    created_at: new Date().toISOString()
-                };
-                
-                const { error } = await supabase
-                    .from('subscriptions')
-                    .upsert(subscriptionData, {
-                        onConflict: 'user_id,endpoint'
-                    });
-                
-                if (error) {
-                    console.error('❌ Erreur enregistrement abonnement:', error);
-                } else {
-                    console.log('✅ Abonnement enregistré');
-                }
-            } catch (error) {
-                console.error('❌ Erreur sauvegarde:', error);
-            }
-        }
-
-        function arrayBufferToBase64(buffer) {
-            const bytes = new Uint8Array(buffer);
-            let binary = '';
-            for (let i = 0; i < bytes.byteLength; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            return window.btoa(binary);
         }
     </script>
     
@@ -1733,22 +1667,94 @@
                 return;
             }
 
-            currentUser = await getCurrentUser();
-            if (currentUser) {
-                userProfile = await getUserProfile(currentUser.id);
-                
-                if (userProfile) {
-                    updateMenu();
-                    showWelcomePopup();
-                    loadNotificationCount();
-                    loadMessageCount();
-                    setupRealTimeUpdates();
-                    await loadUserReactions();
+            try {
+                currentUser = await getCurrentUser();
+                if (currentUser) {
+                    try {
+                        userProfile = await getUserProfile(currentUser.id);
+                        
+                        if (!userProfile) {
+                            try {
+                                await createOAuthProfile(currentUser);
+                                userProfile = await getUserProfile(currentUser.id);
+                            } catch (profileError) {
+                                console.warn('Impossible de créer le profil:', profileError);
+                                userProfile = null;
+                            }
+                        }
+                        
+                        if (userProfile) {
+                            updateMenu();
+                            showWelcomePopup();
+                            loadNotificationCount();
+                            loadMessageCount();
+                            setupRealTimeUpdates();
+                            await loadUserReactions();
+                        } else {
+                            console.warn('Profil utilisateur non disponible, continuant sans profil');
+                            updateMenu();
+                        }
+                    } catch (userError) {
+                        console.warn('Erreur lors de la récupération du profil:', userError);
+                        userProfile = null;
+                        updateMenu();
+                    }
                 }
+            } catch (error) {
+                console.error('Erreur lors de l\'initialisation:', error);
             }
+            
             loadArticles();
             initNavigation();
         });
+
+        async function createOAuthProfile(user) {
+            try {
+                let prenom = 'Utilisateur';
+                let nom = 'Nouveau';
+
+                if (user.user_metadata) {
+                    if (user.user_metadata.full_name) {
+                        const nameParts = user.user_metadata.full_name.split(' ');
+                        prenom = nameParts[0] || 'Utilisateur';
+                        nom = nameParts.slice(1).join(' ') || 'Nouveau';
+                    } else if (user.user_metadata.name) {
+                        const nameParts = user.user_metadata.name.split(' ');
+                        prenom = nameParts[0] || 'Utilisateur';
+                        nom = nameParts.slice(1).join(' ') || 'Nouveau';
+                    } else if (user.user_metadata.given_name && user.user_metadata.family_name) {
+                        prenom = user.user_metadata.given_name;
+                        nom = user.user_metadata.family_name;
+                    }
+                }
+
+                if (prenom === 'Utilisateur' && nom === 'Nouveau' && user.email) {
+                    prenom = user.email.split('@')[0];
+                    nom = '';
+                }
+
+                const { data, error } = await supabase
+                    .from('users_profile')
+                    .insert({
+                        user_id: user.id,
+                        prenom: prenom,
+                        nom: nom,
+                        role: 'user'
+                    })
+                    .select()
+                    .single();
+
+                if (error && error.code !== '23505') {
+                    console.warn('Avertissement création profil:', error.message);
+                    return null;
+                }
+                
+                return data;
+            } catch (error) {
+                console.warn('Erreur lors de la création du profil:', error);
+                return null;
+            }
+        }
 
         function showWelcomePopup() {
             if (!userProfile) return;
@@ -1808,17 +1814,22 @@
                     .select('article_id, reaction_type')
                     .eq('user_id', currentUser.id);
                 
-                if (error) throw error;
+                if (error) {
+                    console.warn('Avertissement chargement réactions:', error);
+                    return;
+                }
                 
                 userReactions = {};
-                data.forEach(reaction => {
-                    if (!userReactions[reaction.article_id]) {
-                        userReactions[reaction.article_id] = [];
-                    }
-                    userReactions[reaction.article_id].push(reaction.reaction_type);
-                });
+                if (data) {
+                    data.forEach(reaction => {
+                        if (!userReactions[reaction.article_id]) {
+                            userReactions[reaction.article_id] = [];
+                        }
+                        userReactions[reaction.article_id].push(reaction.reaction_type);
+                    });
+                }
             } catch (error) {
-                console.error('Erreur chargement réactions:', error);
+                console.warn('Erreur chargement réactions:', error);
             }
         }
 
@@ -1916,68 +1927,74 @@
         }
 
         function setupRealTimeUpdates() {
-            supabase
-                .channel('articles-changes')
-                .on('postgres_changes', { 
-                    event: '*', 
-                    schema: 'public', 
-                    table: 'articles' 
-                }, (payload) => {
-                    console.log('Article changé:', payload);
-                    loadArticles();
-                })
-                .subscribe();
+            if (!currentUser) return;
+            
+            try {
+                supabase
+                    .channel('articles-changes')
+                    .on('postgres_changes', { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'articles' 
+                    }, (payload) => {
+                        console.log('Article changé:', payload);
+                        loadArticles();
+                    })
+                    .subscribe();
 
-            supabase
-                .channel('reactions-changes')
-                .on('postgres_changes', { 
-                    event: '*', 
-                    schema: 'public', 
-                    table: 'article_reactions' 
-                }, (payload) => {
-                    console.log('Réaction changée:', payload);
-                    loadUserReactions();
-                    loadArticles();
-                })
-                .subscribe();
+                supabase
+                    .channel('reactions-changes')
+                    .on('postgres_changes', { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'article_reactions' 
+                    }, (payload) => {
+                        console.log('Réaction changée:', payload);
+                        loadUserReactions();
+                        loadArticles();
+                    })
+                    .subscribe();
 
-            supabase
-                .channel('comments-changes')
-                .on('postgres_changes', { 
-                    event: '*', 
-                    schema: 'public', 
-                    table: 'sessions_commentaires' 
-                }, (payload) => {
-                    console.log('Commentaire changé:', payload);
-                    loadArticles();
-                })
-                .subscribe();
+                supabase
+                    .channel('comments-changes')
+                    .on('postgres_changes', { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'sessions_commentaires' 
+                    }, (payload) => {
+                        console.log('Commentaire changé:', payload);
+                        loadArticles();
+                    })
+                    .subscribe();
 
-            supabase
-                .channel('notifications-changes')
-                .on('postgres_changes', { 
-                    event: 'INSERT', 
-                    schema: 'public', 
-                    table: 'notifications',
-                    filter: `user_id=eq.${currentUser.id}`
-                }, (payload) => {
-                    console.log('Nouvelle notification:', payload);
-                    loadNotificationCount();
-                })
-                .subscribe();
+                supabase
+                    .channel('notifications-changes')
+                    .on('postgres_changes', { 
+                        event: 'INSERT', 
+                        schema: 'public', 
+                        table: 'notifications',
+                        filter: `user_id=eq.${currentUser.id}`
+                    }, (payload) => {
+                        console.log('Nouvelle notification:', payload);
+                        loadNotificationCount();
+                    })
+                    .subscribe();
 
-            supabase
-                .channel('messages-changes')
-                .on('postgres_changes', { 
-                    event: 'INSERT', 
-                    schema: 'public', 
-                    table: 'messages',
-                    filter: `receiver_id=eq.${currentUser.id}`
-                }, (payload) => {
-                    console.log('Nouveau message:', payload);
-                    loadMessageCount();
-                })
-                .subscribe();
+                supabase
+                    .channel('messages-changes')
+                    .on('postgres_changes', { 
+                        event: 'INSERT', 
+                        schema: 'public', 
+                        table: 'messages',
+                        filter: `receiver_id=eq.${currentUser.id}`
+                    }, (payload) => {
+                        console.log('Nouveau message:', payload);
+                        loadMessageCount();
+                    })
+                    .subscribe();
+            } catch (error) {
+                console.warn('Erreur lors de la configuration des mises à jour en temps réel:', error);
+            }
         }
 
         async function loadArticles() {
@@ -2351,13 +2368,17 @@
         window.shareToMore = shareToMore;
 
         async function loadNotificationCount() {
+            if (!currentUser) return;
             try {
                 const { count, error } = await supabase
                     .from('notifications')
                     .select('*', { count: 'exact', head: true })
                     .eq('user_id', currentUser.id)
                     .eq('read_status', false);
-                if (error) throw error;
+                if (error) {
+                    console.warn('Avertissement notifications:', error);
+                    return;
+                }
                 const badge = document.getElementById('notif-badge');
                 if (count > 0) {
                     badge.textContent = count;
@@ -2366,18 +2387,22 @@
                     badge.style.display = 'none';
                 }
             } catch (error) {
-                console.error('Erreur notifications:', error);
+                console.warn('Erreur notifications:', error);
             }
         }
 
         async function loadMessageCount() {
+            if (!currentUser) return;
             try {
                 const { count, error } = await supabase
                     .from('messages')
                     .select('*', { count: 'exact', head: true })
                     .eq('receiver_id', currentUser.id)
                     .eq('read_status', false);
-                if (error) throw error;
+                if (error) {
+                    console.warn('Avertissement messages:', error);
+                    return;
+                }
                 const badge = document.getElementById('message-badge');
                 if (count > 0) {
                     badge.textContent = count;
@@ -2386,7 +2411,7 @@
                     badge.style.display = 'none';
                 }
             } catch (error) {
-                console.error('Erreur messages:', error);
+                console.warn('Erreur messages:', error);
             }
         }
 
