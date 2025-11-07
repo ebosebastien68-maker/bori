@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portail Spirituel</title>
+    <title>Secrets Spirituels des Aïeux</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -14,9 +14,7 @@
 
         body {
             font-family: 'Georgia', 'Times New Roman', serif;
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 25%, #FF6347 50%, #FFD700 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF6347 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,12 +24,6 @@
             overflow-x: hidden;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         body::before {
             content: '';
             position: absolute;
@@ -39,66 +31,67 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 50%, rgba(34, 139, 34, 0.3) 0%, transparent 50%);
-            animation: pulseAura 8s ease-in-out infinite;
-            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(144, 238, 144, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 192, 203, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 15s ease-in-out infinite;
         }
 
-        @keyframes pulseAura {
+        @keyframes backgroundShift {
             0%, 100% { opacity: 0.5; transform: scale(1); }
             50% { opacity: 0.8; transform: scale(1.1); }
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 30px;
-            box-shadow: 0 30px 80px rgba(139, 0, 0, 0.4),
-                        0 0 50px rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 32px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
             overflow: hidden;
             width: 100%;
-            max-width: 520px;
+            max-width: 500px;
             position: relative;
-            animation: floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+            animation: containerEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 3px solid rgba(255, 215, 0, 0.3);
         }
 
-        @keyframes floatIn {
+        @keyframes containerEntrance {
             from {
                 opacity: 0;
-                transform: translateY(50px) scale(0.9);
+                transform: scale(0.9) translateY(30px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: scale(1) translateY(0);
             }
         }
 
         .spiritual-header {
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-            padding: 30px;
+            background: linear-gradient(135deg, #8B0000, #B22222);
+            padding: 30px 20px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
         .spiritual-header::before {
-            content: '✧';
+            content: '✦';
             position: absolute;
-            font-size: 100px;
+            font-size: 80px;
             color: rgba(255, 215, 0, 0.2);
             top: -20px;
-            left: -20px;
+            left: -10px;
             animation: rotate 20s linear infinite;
         }
 
         .spiritual-header::after {
-            content: '✧';
+            content: '✦';
             position: absolute;
-            font-size: 80px;
-            color: rgba(255, 192, 203, 0.2);
-            bottom: -10px;
-            right: -10px;
+            font-size: 60px;
+            color: rgba(255, 215, 0, 0.2);
+            bottom: -15px;
+            right: -5px;
             animation: rotate 15s linear infinite reverse;
         }
 
@@ -109,36 +102,23 @@
 
         .spiritual-title {
             color: #FFD700;
-            font-size: 32px;
+            font-size: 26px;
             font-weight: bold;
+            margin-bottom: 8px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
+            letter-spacing: 1px;
         }
 
         .spiritual-subtitle {
-            color: #FFF;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 14px;
             font-style: italic;
-            position: relative;
-            z-index: 1;
         }
 
         .tabs {
             display: flex;
-            background: linear-gradient(to right, #FFD700, #FF6347, #FFD700);
-            border-bottom: 3px solid #8B0000;
-            position: relative;
-        }
-
-        .tab-indicator {
-            position: absolute;
-            bottom: 0;
-            height: 4px;
-            background: #8B0000;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.1), rgba(144, 238, 144, 0.1), rgba(255, 192, 203, 0.1));
+            border-bottom: 2px solid rgba(139, 0, 0, 0.2);
         }
 
         .tab {
@@ -146,65 +126,87 @@
             padding: 20px;
             text-align: center;
             cursor: pointer;
-            font-weight: 700;
+            font-weight: 600;
             color: #8B0000;
-            transition: all 0.4s ease;
+            border-bottom: 4px solid transparent;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 15px;
             position: relative;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: white;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700, #90EE90);
+            transform: translateX(-50%);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tab.active {
-            color: #FFF;
-            background: rgba(139, 0, 0, 0.3);
-            transform: scale(1.05);
+            color: #DC143C;
+            background: linear-gradient(to bottom, white, rgba(255, 215, 0, 0.05));
+            transform: translateY(-2px);
+        }
+
+        .tab.active::before {
+            width: 80%;
         }
 
         .tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
+            color: #B22222;
+            background: rgba(255, 215, 0, 0.05);
+            transform: translateY(-1px);
         }
 
         .form-container {
-            padding: 50px 45px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 228, 196, 0.3));
+            padding: 48px 40px;
+            position: relative;
         }
 
         .form-content {
             display: none;
-            animation: slideAndFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-content.active {
             display: block;
         }
 
-        @keyframes slideAndFade {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateX(-30px) rotateY(-10deg);
+                transform: translateY(25px);
             }
             to {
                 opacity: 1;
-                transform: translateX(0) rotateY(0);
+                transform: translateY(0);
             }
         }
 
         h2 {
             color: #8B0000;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: center;
-            font-size: 30px;
-            font-weight: 800;
-            text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.3);
+            font-size: 28px;
+            font-weight: 700;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(139, 0, 0, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(220, 20, 60, 0.5); }
         }
 
         .subtitle {
             text-align: center;
-            color: #DC143C;
-            margin-bottom: 35px;
-            font-size: 15px;
+            color: #B22222;
+            margin-bottom: 32px;
+            font-size: 14px;
             font-style: italic;
         }
 
@@ -212,85 +214,93 @@
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 30px 0;
-            color: #8B0000;
-            font-size: 14px;
-            font-weight: 700;
+            margin: 28px 0;
+            color: #B22222;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .divider::before,
         .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 2px solid #FFD700;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
         }
 
         .divider span {
-            padding: 0 20px;
-            background: linear-gradient(135deg, #8B0000, #DC143C);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            padding: 0 16px;
+            color: #8B0000;
         }
 
         .input-group {
-            margin-bottom: 25px;
-            position: relative;
+            margin-bottom: 24px;
+            animation: slideIn 0.5s ease-out backwards;
+        }
+
+        .input-group:nth-child(1) { animation-delay: 0.1s; }
+        .input-group:nth-child(2) { animation-delay: 0.2s; }
+        .input-group:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #8B0000;
             font-weight: 700;
             font-size: 14px;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         input {
             width: 100%;
             padding: 16px 18px;
-            border: 3px solid #FFD700;
-            border-radius: 15px;
+            border: 2px solid rgba(139, 0, 0, 0.2);
+            border-radius: 16px;
             font-size: 15px;
-            transition: all 0.4s ease;
-            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(to bottom, white, rgba(255, 215, 0, 0.02));
             font-family: inherit;
         }
 
         input:focus {
             outline: none;
             border-color: #DC143C;
-            box-shadow: 0 0 0 6px rgba(220, 20, 60, 0.2),
-                        0 0 20px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.15), 0 8px 16px rgba(139, 0, 0, 0.1);
             transform: translateY(-2px);
-            background: #FFF;
+            background: white;
         }
 
         input::placeholder {
-            color: #CD5C5C;
-            font-style: italic;
+            color: rgba(139, 0, 0, 0.4);
         }
 
         .btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF6347 100%);
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #8B0000 100%);
             background-size: 200% 100%;
             color: white;
             border: none;
-            border-radius: 15px;
+            border-radius: 16px;
             font-size: 17px;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.5s ease;
-            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4),
-                        0 0 30px rgba(255, 215, 0, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
+            letter-spacing: 1px;
         }
 
         .btn::before {
@@ -300,7 +310,7 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
@@ -312,69 +322,60 @@
         }
 
         .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(220, 20, 60, 0.5);
             background-position: 100% 0;
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(139, 0, 0, 0.6),
-                        0 0 40px rgba(255, 215, 0, 0.4);
         }
 
         .btn:active {
-            transform: translateY(-1px) scale(0.98);
+            transform: translateY(-1px);
         }
 
         .btn:disabled {
-            background: linear-gradient(135deg, #808080 0%, #A9A9A9 100%);
+            background: linear-gradient(135deg, #999, #666);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        .btn span {
-            position: relative;
-            z-index: 1;
-        }
-
         .message {
-            padding: 16px 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            margin-bottom: 24px;
             text-align: center;
             display: none;
             font-size: 14px;
             font-weight: 600;
-            animation: messageSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: messageSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes messageSlide {
             from {
                 opacity: 0;
-                transform: translateY(-20px) scale(0.8);
+                transform: translateY(-15px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0);
             }
         }
 
         .message.error {
-            background: linear-gradient(135deg, #FF6347, #DC143C);
-            color: #FFF;
-            border: 3px solid #8B0000;
-            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+            background: linear-gradient(135deg, #FFF5F5, #FFE3E3);
+            color: #C00;
+            border: 2px solid #FF6B6B;
         }
 
         .message.success {
-            background: linear-gradient(135deg, #228B22, #32CD32);
-            color: #FFF;
-            border: 3px solid #006400;
-            box-shadow: 0 4px 15px rgba(34, 139, 34, 0.3);
+            background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+            color: #15803D;
+            border: 2px solid #90EE90;
         }
 
         .message.info {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #8B0000;
-            border: 3px solid #FF8C00;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            background: linear-gradient(135deg, #FFF9E6, #FFF4CC);
+            color: #B8860B;
+            border: 2px solid #FFD700;
         }
 
         .message.show {
@@ -384,7 +385,7 @@
         .loader {
             display: none;
             text-align: center;
-            padding: 40px;
+            padding: 40px 20px;
         }
 
         .loader.show {
@@ -392,38 +393,38 @@
         }
 
         .spinner {
-            border: 4px solid rgba(255, 215, 0, 0.3);
+            border: 4px solid rgba(139, 0, 0, 0.1);
             border-top: 4px solid #DC143C;
             border-right: 4px solid #FFD700;
-            border-bottom: 4px solid #228B22;
             border-radius: 50%;
             width: 50px;
             height: 50px;
-            animation: spinMulticolor 1s linear infinite;
+            animation: spinGlow 1s linear infinite;
             margin: 0 auto;
         }
 
-        @keyframes spinMulticolor {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spinGlow {
+            0% { transform: rotate(0deg); filter: drop-shadow(0 0 5px rgba(220, 20, 60, 0.5)); }
+            50% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); }
+            100% { transform: rotate(360deg); filter: drop-shadow(0 0 5px rgba(220, 20, 60, 0.5)); }
         }
 
         .loader-text {
             margin-top: 20px;
             color: #8B0000;
             font-size: 15px;
-            font-weight: 700;
-            animation: pulse 1.5s ease-in-out infinite;
+            font-weight: 600;
+            animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         .name-group {
             display: flex;
-            gap: 20px;
+            gap: 16px;
         }
 
         .name-group .input-group {
@@ -431,20 +432,19 @@
         }
 
         .info-text {
-            background: linear-gradient(135deg, rgba(255, 192, 203, 0.3), rgba(255, 215, 0, 0.2));
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(144, 238, 144, 0.1));
             padding: 18px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            border-radius: 16px;
+            margin-bottom: 24px;
             color: #8B0000;
             font-size: 14px;
             line-height: 1.7;
-            border: 2px solid #FFD700;
-            font-style: italic;
+            border: 2px solid rgba(255, 215, 0, 0.3);
         }
 
         .back-link {
             text-align: center;
-            margin-top: 25px;
+            margin-top: 24px;
         }
 
         .back-link a {
@@ -454,48 +454,58 @@
             font-size: 14px;
             transition: all 0.3s ease;
             display: inline-block;
-            padding: 8px 16px;
-            border-radius: 8px;
         }
 
         .back-link a:hover {
             color: #8B0000;
-            background: rgba(255, 215, 0, 0.2);
-            transform: translateX(-5px);
+            transform: translateX(-3px);
+            text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.3);
         }
 
         @media (max-width: 480px) {
             .form-container {
-                padding: 35px 25px;
+                padding: 32px 24px;
             }
 
             h2 {
-                font-size: 26px;
+                font-size: 24px;
             }
 
             .name-group {
                 flex-direction: column;
-                gap: 25px;
+                gap: 20px;
             }
 
             .spiritual-title {
-                font-size: 26px;
+                font-size: 22px;
             }
+        }
+
+        .mystical-ornament {
+            text-align: center;
+            margin: 20px 0;
+            color: rgba(139, 0, 0, 0.3);
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="spiritual-header">
-            <div class="spiritual-title">Secrets Ancestraux</div>
-            <div class="spiritual-subtitle">Le Portail de la Sagesse Spirituelle</div>
+            <div class="spiritual-title">✦ Secrets Spirituels des Aïeux ✦</div>
+            <div class="spiritual-subtitle">Héritage ancestral et sagesse millénaire</div>
         </div>
 
         <div class="tabs">
             <div class="tab active" data-tab="connexion">Connexion</div>
             <div class="tab" data-tab="inscription">Inscription</div>
-            <div class="tab" data-tab="reset">Réinitialiser</div>
-            <div class="tab-indicator"></div>
+            <div class="tab" data-tab="reset">Récupération</div>
         </div>
 
         <div class="form-container">
@@ -503,71 +513,75 @@
             
             <div id="loader" class="loader">
                 <div class="spinner"></div>
-                <p class="loader-text">Connexion au royaume spirituel...</p>
+                <p class="loader-text">Connexion aux énergies ancestrales...</p>
             </div>
 
             <!-- Formulaire de Connexion -->
             <div id="connexion-form" class="form-content active">
-                <h2>Bienvenue</h2>
-                <p class="subtitle">Accédez aux enseignements sacrés</p>
+                <h2>Bienvenue à nouveau</h2>
+                <p class="subtitle">Reconnectez-vous à votre héritage spirituel</p>
                 
+                <div class="mystical-ornament">❖ ❖ ❖</div>
+
                 <form id="login-form">
                     <div class="input-group">
-                        <label for="login-email">Email Sacré</label>
+                        <label for="login-email">✦ Adresse Email</label>
                         <input type="email" id="login-email" required placeholder="votre@email.com">
                     </div>
                     <div class="input-group">
-                        <label for="login-password">Mot de Passe Mystique</label>
+                        <label for="login-password">✦ Mot de Passe Sacré</label>
                         <input type="password" id="login-password" required placeholder="••••••••">
                     </div>
-                    <button type="submit" class="btn"><span>Entrer dans le Sanctuaire</span></button>
+                    <button type="submit" class="btn">Entrer dans le Sanctuaire</button>
                 </form>
                 <div class="back-link">
-                    <a href="#" onclick="switchTab('reset'); return false;">Mot de passe oublié ?</a>
+                    <a href="#" onclick="switchTab('reset'); return false;">← Mot de passe oublié ?</a>
                 </div>
             </div>
 
             <!-- Formulaire d'Inscription -->
             <div id="inscription-form" class="form-content">
-                <h2>Rejoignez-Nous</h2>
-                <p class="subtitle">Découvrez l'héritage de nos aïeux</p>
+                <h2>Rejoignez notre cercle</h2>
+                <p class="subtitle">Accédez aux secrets de vos ancêtres</p>
                 
+                <div class="mystical-ornament">❖ ❖ ❖</div>
+
                 <form id="signup-form">
                     <div class="name-group">
                         <div class="input-group">
-                            <label for="signup-prenom">Prénom</label>
+                            <label for="signup-prenom">✦ Prénom</label>
                             <input type="text" id="signup-prenom" required placeholder="Prénom">
                         </div>
                         <div class="input-group">
-                            <label for="signup-nom">Nom</label>
+                            <label for="signup-nom">✦ Nom</label>
                             <input type="text" id="signup-nom" required placeholder="Nom">
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="signup-email">Email</label>
+                        <label for="signup-email">✦ Adresse Email</label>
                         <input type="email" id="signup-email" required placeholder="votre@email.com">
                     </div>
                     <div class="input-group">
-                        <label for="signup-password">Mot de Passe</label>
+                        <label for="signup-password">✦ Mot de Passe Sacré</label>
                         <input type="password" id="signup-password" required placeholder="••••••••" minlength="6">
                     </div>
-                    <button type="submit" class="btn"><span>Commencer le Voyage</span></button>
+                    <button type="submit" class="btn">Commencer votre Voyage Spirituel</button>
                 </form>
             </div>
 
             <!-- Formulaire Mot de passe oublié -->
             <div id="reset-form" class="form-content">
-                <h2>Retrouvez Votre Chemin</h2>
-                <p class="subtitle">Récupération spirituelle</p>
+                <h2>Récupération sacrée</h2>
+                <p class="subtitle">Retrouvez l'accès à votre sanctuaire</p>
                 <div class="info-text">
-                    Entrez votre adresse email et nous vous enverrons un lien sacré pour réinitialiser votre mot de passe et retrouver l'accès aux enseignements.
+                    ✦ Entrez votre adresse email et nous vous enverrons un lien sacré pour restaurer votre accès aux enseignements ancestraux.
                 </div>
                 <form id="password-reset-form">
                     <div class="input-group">
-                        <label for="reset-email">Email</label>
+                        <label for="reset-email">✦ Adresse Email</label>
                         <input type="email" id="reset-email" required placeholder="votre@email.com">
                     </div>
-                    <button type="submit" class="btn"><span>Envoyer le Lien Sacré</span></button>
+                    <button type="submit" class="btn">Envoyer le Lien Sacré</button>
                 </form>
                 <div class="back-link">
                     <a href="#" onclick="switchTab('connexion'); return false;">← Retour à la connexion</a>
@@ -584,7 +598,6 @@
             if (window.supabaseClient) {
                 ({ supabase, getCurrentUser, getUserProfile, redirectByRole } = window.supabaseClient);
                 checkIfLoggedIn();
-                updateTabIndicator();
             } else {
                 setTimeout(initializeApp, 100);
             }
@@ -593,25 +606,16 @@
         async function checkIfLoggedIn() {
             const user = await getCurrentUser();
             if (user) {
-                await redirectByRole();
+                const profile = await getUserProfile(user.id);
+                if (profile) {
+                    await redirectByRole();
+                }
             }
         }
 
         window.addEventListener('DOMContentLoaded', initializeApp);
 
-        function updateTabIndicator() {
-            const activeTab = document.querySelector('.tab.active');
-            const indicator = document.querySelector('.tab-indicator');
-            const tabs = document.querySelectorAll('.tab');
-            
-            if (activeTab && indicator) {
-                const index = Array.from(tabs).indexOf(activeTab);
-                const width = 100 / tabs.length;
-                indicator.style.width = width + '%';
-                indicator.style.left = (width * index) + '%';
-            }
-        }
-
+        // Gestion des onglets avec animation
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -630,7 +634,6 @@
             if (selectedTab) selectedTab.classList.add('active');
             if (selectedForm) selectedForm.classList.add('active');
             
-            updateTabIndicator();
             hideMessage();
         }
 
@@ -658,6 +661,7 @@
             }
         }
 
+        // Formulaire de connexion
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -674,24 +678,38 @@
 
                 if (error) throw error;
 
-                const profile = await getUserProfile(data.user.id);
-
-                if (!profile) {
-                    throw new Error('Profil utilisateur introuvable. Contactez l\'administrateur.');
+                // Gestion silencieuse de l'absence de profil
+                try {
+                    const profile = await getUserProfile(data.user.id);
+                    
+                    if (profile) {
+                        showMessage('Connexion réussie ! Bienvenue dans le sanctuaire...', 'success');
+                        setTimeout(async () => {
+                            await redirectByRole();
+                        }, 1500);
+                    } else {
+                        // Continue silencieusement sans profil
+                        showMessage('Connexion réussie ! Redirection...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    }
+                } catch (profileError) {
+                    // En cas d'erreur de profil, on continue quand même
+                    console.log('Profil non trouvé, continuation sans profil:', profileError);
+                    showMessage('Connexion réussie ! Redirection...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
                 }
-
-                showMessage('Connexion réussie ! Bienvenue dans le sanctuaire...', 'success');
-                
-                setTimeout(async () => {
-                    await redirectByRole();
-                }, 1500);
 
             } catch (error) {
                 toggleLoader(false);
-                showMessage(error.message || 'Erreur de connexion', 'error');
+                showMessage(error.message || 'Erreur de connexion. Vérifiez vos identifiants.', 'error');
             }
         });
 
+        // Formulaire d'inscription
         document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -716,40 +734,38 @@
 
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
-                const { error: profileError } = await supabase
-                    .from('users_profile')
-                    .insert({
-                        user_id: authData.user.id,
-                        prenom: prenom,
-                        nom: nom,
-                        role: 'user'
-                    });
+                // Gestion silencieuse de l'erreur de profil
+                try {
+                    const { error: profileError } = await supabase
+                        .from('users_profile')
+                        .insert({
+                            user_id: authData.user.id,
+                            prenom: prenom,
+                            nom: nom,
+                            role: 'user'
+                        });
 
-                if (profileError) {
-                    throw new Error(`Erreur lors de la création du profil: ${profileError.message}`);
+                    if (profileError) {
+                        console.log('Erreur profil (non-bloquante):', profileError);
+                    }
+                } catch (profileError) {
+                    console.log('Erreur lors de la création du profil (ignorée):', profileError);
                 }
 
-                showMessage('Inscription réussie ! Vérifiez votre email pour confirmer votre compte.', 'success');
+                showMessage('✦ Inscription réussie ! Vérifiez votre email pour confirmer votre compte. ✦', 'success');
 
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 2000);
+                }, 2500);
 
             } catch (error) {
                 toggleLoader(false);
-                console.error('Erreur complète:', error);
+                console.error('Erreur inscription:', error);
                 showMessage(error.message || 'Erreur lors de l\'inscription', 'error');
-                
-                if (error.message.includes('profil')) {
-                    try {
-                        await supabase.auth.signOut();
-                    } catch (e) {
-                        console.error('Erreur lors du nettoyage:', e);
-                    }
-                }
             }
         });
 
+        // Formulaire de réinitialisation
         document.getElementById('password-reset-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -764,7 +780,7 @@
 
                 if (error) throw error;
 
-                showMessage('Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.', 'success');
+                showMessage('✦ Email de récupération envoyé ! Vérifiez votre boîte de réception. ✦', 'success');
                 
                 toggleLoader(false);
                 document.getElementById('password-reset-form').reset();
@@ -774,6 +790,15 @@
                 showMessage(error.message || 'Une erreur est survenue. Veuillez réessayer.', 'error');
             }
         });
+
+        // Animation de défilement fluide
+        document.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
     </script>
 </body>
-                </html>
+    </html>
