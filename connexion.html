@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secrets Spirituels des Aïeux</title>
+    <title>Secrets Spirituels des Aïeux - Connexion</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -592,24 +592,15 @@
 
     <script src="supabaseClient.js"></script>
     <script>
-        let supabase, getCurrentUser, getUserProfile, redirectByRole;
+        let supabase, getCurrentUser, getUserProfile, redirectByRole, isLoggedIn;
 
         function initializeApp() {
             if (window.supabaseClient) {
-                ({ supabase, getCurrentUser, getUserProfile, redirectByRole } = window.supabaseClient);
-                checkIfLoggedIn();
+                ({ supabase, getCurrentUser, getUserProfile, redirectByRole, isLoggedIn } = window.supabaseClient);
+                // NE PAS appeler checkIfLoggedIn() ici - on laisse l'utilisateur sur la page
+                console.log('Client Supabase initialisé');
             } else {
                 setTimeout(initializeApp, 100);
-            }
-        }
-
-        async function checkIfLoggedIn() {
-            const user = await getCurrentUser();
-            if (user) {
-                const profile = await getUserProfile(user.id);
-                if (profile) {
-                    await redirectByRole();
-                }
             }
         }
 
@@ -661,7 +652,7 @@
             }
         }
 
-        // Formulaire de connexion
+        // Formulaire de connexion - AVEC redirection après succès
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -678,30 +669,17 @@
 
                 if (error) throw error;
 
-                // Gestion silencieuse de l'absence de profil
-                try {
-                    const profile = await getUserProfile(data.user.id);
-                    
-                    if (profile) {
-                        showMessage('Connexion réussie ! Bienvenue dans le sanctuaire...', 'success');
-                        setTimeout(async () => {
-                            await redirectByRole();
-                        }, 1500);
-                    } else {
-                        // Continue silencieusement sans profil
-                        showMessage('Connexion réussie ! Redirection...', 'success');
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 1500);
-                    }
-                } catch (profileError) {
-                    // En cas d'erreur de profil, on continue quand même
-                    console.log('Profil non trouvé, continuation sans profil:', profileError);
-                    showMessage('Connexion réussie ! Redirection...', 'success');
-                    setTimeout(() => {
+                showMessage('✦ Connexion réussie ! Bienvenue dans le sanctuaire... ✦', 'success');
+                
+                // REDIRECTION UNIQUEMENT APRÈS UNE CONNEXION RÉUSSIE
+                setTimeout(async () => {
+                    try {
+                        await redirectByRole();
+                    } catch (redirectError) {
+                        console.error('Erreur de redirection:', redirectError);
                         window.location.href = 'index.html';
-                    }, 1500);
-                }
+                    }
+                }, 1500);
 
             } catch (error) {
                 toggleLoader(false);
@@ -709,7 +687,7 @@
             }
         });
 
-        // Formulaire d'inscription
+        // Formulaire d'inscription - AVEC redirection après succès
         document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -754,8 +732,14 @@
 
                 showMessage('✦ Inscription réussie ! Vérifiez votre email pour confirmer votre compte. ✦', 'success');
 
-                setTimeout(() => {
-                    window.location.href = 'index.html';
+                // REDIRECTION UNIQUEMENT APRÈS UNE INSCRIPTION RÉUSSIE
+                setTimeout(async () => {
+                    try {
+                        await redirectByRole();
+                    } catch (redirectError) {
+                        console.error('Erreur de redirection:', redirectError);
+                        window.location.href = 'index.html';
+                    }
                 }, 2500);
 
             } catch (error) {
@@ -765,7 +749,7 @@
             }
         });
 
-        // Formulaire de réinitialisation
+        // Formulaire de réinitialisation - SANS redirection
         document.getElementById('password-reset-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
