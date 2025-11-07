@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Promouvoir un utilisateur — Admin</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#6ee7b7;
+      --danger:#ff6b6b;
+      --glass: rgba(255,255,255,0.03);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,#071023 0%, #071829 100%);
+      color:#e6eef6;
+      padding:24px;
+      -webkit-font-smoothing:antialiased;
+    }
+    .card{
+      width:720px;
+      max-width:96vw;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px;
+      padding:22px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    h1{margin:0 0 8px; font-size:20px; letter-spacing:-0.2px}
+    p.lead{margin:0 0 18px; color:var(--muted); font-size:13px}
+    .row{display:flex; gap:12px; align-items:center}
+    .input{
+      flex:1;
+      background:var(--glass);
+      padding:12px 14px;
+      border-radius:10px;
+      border: 1px solid rgba(255,255,255,0.02);
+      color:inherit;
+      font-size:14px;
+    }
+    .btn{
+      background:linear-gradient(90deg, #22c55e, #16a34a);
+      color:#04121a;
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      user-select:none;
+    }
+    .btn:disabled{opacity:0.5; cursor:default}
+    .btn-danger{
+      background:linear-gradient(90deg,#ff7b7b,#ff4d4d);
+      color:#1f0f0f;
+    }
+    .meta{
+      margin-top:16px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .box{
+      background:rgba(255,255,255,0.02);
+      padding:12px;
+      border-radius:10px;
+      flex:1;
+      font-size:13px;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    pre{white-space:pre-wrap; word-break:break-word; margin:0; color:#dbeafe}
+    .status{
+      margin-top:14px;
+      font-size:13px;
+      min-height:20px;
+      color:var(--muted);
+    }
+    .success{color:var(--accent); font-weight:600}
+    .error{color:var(--danger); font-weight:600}
+    .small{font-size:12px; color:var(--muted)}
+    footer{margin-top:16px; text-align:right; font-size:12px; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <h1 id="title">Promouvoir un utilisateur (par e-mail)</h1>
+    <p class="lead">Saisis l'e-mail, vérifie l'utilisateur et clique pour mettre son rôle à <code>admin</code>. L'utilisateur courant doit être admin ou la policy RLS doit l'autoriser.</p>
+
+    <div class="row" style="margin-bottom:14px">
+      <input id="email" class="input" type="email" placeholder="email de l'utilisateur (ex. jean@example.com)" />
+      <button id="findBtn" class="btn" type="button">Rechercher</button>
+      <button id="promoteBtn" class="btn btn-danger" type="button" disabled>Promouvoir en admin</button>
+    </div>
+
+    <div class="meta">
+      <div class="box">
+        <div style="font-weight:600; margin-bottom:8px">Utilisateur trouvé</div>
+        <div id="userInfo" class="small">Aucune recherche encore.</div>
+      </div>
+      <div class="box">
+        <div style="font-weight:600; margin-bottom:8px">Console / Résultat</div>
+        <pre id="console">Prêt.</pre>
+      </div>
+    </div>
+
+    <div class="status" id="status"></div>
+    <footer>Ne jamais exposer la clé <code>service_role</code> dans le frontend.</footer>
+  </div>
+
+  <script type="module">
+    // ATTENTION : supabaseClient.js doit exporter : export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    import { supabase } from './supabaseClient.js';
+
+    const emailInput = document.getElementById('email');
+    const findBtn = document.getElementById('findBtn');
+    const promoteBtn = document.getElementById('promoteBtn');
+    const userInfo = document.getElementById('userInfo');
+    const consoleEl = document.getElementById('console');
+    const statusEl = document.getElementById('status');
+
+    let currentUserRecord = null; // { user_id, role, email }
+
+    function log(msg){
+      consoleEl.textContent = typeof msg === 'string' ? msg : JSON.stringify(msg, null, 2);
+    }
+    function setStatus(text, kind){
+      statusEl.textContent = text || '';
+      statusEl.className = kind ? kind : '';
+    }
+
+    findBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      if(!email){ setStatus('Renseigne un e-mail valide.', 'error'); return; }
+
+      setStatus('Recherche en cours...', '');
+      log('Recherche utilisateur...');
+      promoteBtn.disabled = true;
+      userInfo.textContent = 'Recherche en cours...';
+
+      try {
+        // On suppose que la table users_profile contient une colonne "email" et "user_id" et "role".
+        const { data, error } = await supabase
+          .from('users_profile')
+          .select('user_id, role, email')
+          .eq('email', email)
+          .limit(1)
+          .single();
+
+        if (error) {
+          if (error.code === 'PGRST116') {
+            // Exemple d'erreur de permission
+            setStatus('Permission refusée. Vérifie tes policies RLS ou l’authentification.', 'error');
+          } else {
+            setStatus('Erreur lors de la recherche.', 'error');
+          }
+          log(error);
+          userInfo.textContent = 'Aucun utilisateur trouvé ou erreur.';
+          currentUserRecord = null;
+          return;
+        }
+
+        currentUserRecord = data;
+        userInfo.innerHTML = `
+          <div><strong>user_id:</strong> ${data.user_id}</div>
+          <div><strong>email:</strong> ${data.email}</div>
+          <div><strong>role actuel:</strong> ${data.role}</div>
+        `;
+        log('Utilisateur trouvé : ' + data.user_id);
+        setStatus('Utilisateur trouvé.', 'success');
+        promoteBtn.disabled = false;
+      } catch (err) {
+        setStatus('Erreur inconnue.', 'error');
+        log(err);
+        currentUserRecord = null;
+      }
+    });
+
+    promoteBtn.addEventListener('click', async () => {
+      if (!currentUserRecord) { setStatus('Aucun utilisateur sélectionné.', 'error'); return; }
+
+      const confirmMsg = `Promouvoir ${currentUserRecord.email} (${currentUserRecord.user_id}) en admin ?`;
+      if (!confirm(confirmMsg)) return;
+
+      promoteBtn.disabled = true;
+      setStatus('Envoi de la mise à jour...', '');
+      log('Updating role to admin...');
+
+      try {
+        // Requête d'UPDATE via supabase-js
+        const { data, error } = await supabase
+          .from('users_profile')
+          .update({ role: 'admin' })
+          .eq('user_id', currentUserRecord.user_id);
+
+        if (error) {
+          setStatus('Erreur lors de la mise à jour. Vérifie permissions.', 'error');
+          log(error);
+          promoteBtn.disabled = false;
+          return;
+        }
+
+        log({
+          message: 'Mise à jour réussie',
+          updated: data
+        });
+        userInfo.innerHTML += `<div style="margin-top:8px"><strong>→ nouveau rôle:</strong> admin</div>`;
+        setStatus('Mise à jour effectuée avec succès.', 'success');
+      } catch (err) {
+        setStatus('Erreur inconnue lors de l\'update.', 'error');
+        log(err);
+      } finally {
+        promoteBtn.disabled = false;
+      }
+    });
+
+    // Optionnel : support "Entrée" pour rechercher
+    emailInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') findBtn.click();
+    });
+  </script>
+</body>
+</html>
