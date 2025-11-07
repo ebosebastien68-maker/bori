@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temple Spirituel - Secrets Ancestraux</title>
+    <title>Temple Spirituel - Sagesse Ancestrale</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,9 +14,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0a0a 0%, #2d1414 100%);
+            color: #ffffff;
             overflow-x: hidden;
-            background: #0a0a0a;
-            color: #fff;
         }
 
         #canvas-container {
@@ -24,126 +25,110 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 0;
+            opacity: 0.3;
         }
 
         .content {
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
         header {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.9), rgba(255, 215, 0, 0.8));
+            padding: 2rem;
             text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(180deg, rgba(220, 20, 60, 0.1) 0%, transparent 50%, rgba(255, 215, 0, 0.1) 100%);
+            box-shadow: 0 10px 40px rgba(220, 20, 60, 0.5);
+            animation: headerGlow 3s ease-in-out infinite;
         }
 
-        .logo-container {
-            margin-bottom: 40px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .logo {
-            font-size: 6em;
-            text-shadow: 0 0 40px rgba(255, 107, 107, 0.8);
+        @keyframes headerGlow {
+            0%, 100% { box-shadow: 0 10px 40px rgba(220, 20, 60, 0.5); }
+            50% { box-shadow: 0 10px 60px rgba(255, 215, 0, 0.8); }
         }
 
         h1 {
-            font-size: 4em;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #ff85c0);
+            font-size: 3rem;
+            background: linear-gradient(45deg, #FFD700, #FF1493, #32CD32);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: glow 2s ease-in-out infinite alternate;
-            line-height: 1.2;
+            text-shadow: 2px 2px 20px rgba(255, 215, 0, 0.5);
+            animation: titleFloat 4s ease-in-out infinite;
         }
 
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.6)); }
-            to { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .subtitle {
-            font-size: 2em;
-            color: #ffd93d;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            font-size: 1.2rem;
+            color: #FFD700;
+            margin-top: 1rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .description {
-            font-size: 1.3em;
-            max-width: 900px;
-            margin: 0 auto 40px;
-            line-height: 1.8;
-            color: #e0e0e0;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 30px;
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.2), rgba(50, 205, 50, 0.2));
             border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 107, 107, 0.3);
+            padding: 3rem;
+            margin: 3rem auto;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            animation: introGlow 4s ease-in-out infinite;
         }
 
-        .scroll-indicator {
-            margin-top: 40px;
-            font-size: 2em;
-            animation: bounce 2s infinite;
-            color: #ff6b6b;
+        @keyframes introGlow {
+            0%, 100% { border-color: rgba(255, 215, 0, 0.5); }
+            50% { border-color: rgba(255, 20, 147, 0.8); }
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-10px); }
-        }
-
-        .services-section {
-            padding: 100px 20px;
-            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 20%, rgba(0, 0, 0, 0.7) 80%, transparent 100%);
-        }
-
-        .services-title {
+        .intro p {
+            font-size: 1.3rem;
+            line-height: 1.8;
             text-align: center;
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            color: #ff6b6b;
-            text-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+            color: #FFD700;
         }
 
-        .services-subtitle {
+        h2 {
+            font-size: 2.5rem;
             text-align: center;
-            font-size: 1.5em;
-            color: #6bcf7f;
-            margin-bottom: 60px;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #DC143C, #FFD700, #32CD32, #FF69B4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbowShift 5s ease-in-out infinite;
+        }
+
+        @keyframes rainbowShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
         }
 
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            max-width: 1400px;
-            margin: 0 auto;
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .service-card {
-            background: linear-gradient(135deg, rgba(220, 20, 60, 0.15) 0%, rgba(255, 215, 0, 0.15) 100%);
-            padding: 40px;
-            border-radius: 20px;
-            border: 2px solid rgba(255, 107, 107, 0.3);
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.3), rgba(255, 215, 0, 0.2));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid transparent;
             transition: all 0.4s ease;
-            backdrop-filter: blur(15px);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .service-card::before {
@@ -153,803 +138,390 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 215, 0, 0.1), 
+                transparent);
             transform: rotate(45deg);
             transition: all 0.6s ease;
         }
 
         .service-card:hover::before {
-            animation: shine 1.5s infinite;
+            animation: shimmer 1.5s ease-in-out infinite;
         }
 
-        @keyframes shine {
+        @keyframes shimmer {
             0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .service-card:hover {
-            transform: translateY(-15px) scale(1.03);
-            border-color: #ffd93d;
-            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.4);
-        }
-
-        .service-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-            display: block;
+            transform: translateY(-10px) scale(1.05);
+            border-color: #FFD700;
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.6);
         }
 
         .service-card h3 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            color: #ffd93d;
-            position: relative;
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(220, 20, 60, 0.7);
         }
 
         .service-card p {
-            line-height: 1.8;
-            color: #e0e0e0;
-            font-size: 1.1em;
+            color: #ffffff;
+            line-height: 1.6;
+            font-size: 1.1rem;
         }
 
-        .gallery-section {
-            padding: 100px 20px;
-            text-align: center;
-            background: linear-gradient(180deg, transparent 0%, rgba(107, 207, 127, 0.1) 50%, transparent 100%);
+        .images-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
 
-        .gallery-title {
-            font-size: 3.5em;
-            margin-bottom: 60px;
-            color: #6bcf7f;
-            text-shadow: 0 0 30px rgba(107, 207, 127, 0.8);
-        }
-
-        .image-showcase {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .showcase-item {
-            width: 250px;
-            height: 250px;
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 133, 192, 0.2));
-            border-radius: 20px;
-            border: 3px solid rgba(255, 215, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
-            cursor: pointer;
+        .image-container {
             position: relative;
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+            animation: imageFloat 6s ease-in-out infinite;
         }
 
-        .showcase-item:hover {
-            transform: scale(1.1) rotate(5deg);
-            border-color: #ffd93d;
-            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.5);
+        .image-container:nth-child(odd) {
+            animation-delay: 1s;
         }
 
-        .showcase-item::after {
-            content: 'Cliquez pour agrandir';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            font-size: 0.9em;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .image-container:nth-child(even) {
+            animation-delay: 2s;
         }
 
-        .showcase-item:hover::after {
-            opacity: 1;
+        @keyframes imageFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(1deg); }
+            75% { transform: translateY(15px) rotate(-1deg); }
         }
 
-        .showcase-icon {
-            font-size: 5em;
-            margin-bottom: 15px;
+        .image-container:hover {
+            transform: scale(1.1) rotate(2deg);
+            border-color: #FFD700;
+            box-shadow: 0 20px 60px rgba(255, 20, 147, 0.7);
         }
 
-        .showcase-label {
-            font-size: 1.5em;
-            color: #ffd93d;
-            font-weight: bold;
+        .image-container img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.2);
         }
 
         .contact-section {
-            padding: 100px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 133, 192, 0.15) 100%);
-            backdrop-filter: blur(10px);
-        }
-
-        .contact-title {
-            font-size: 3.5em;
-            margin-bottom: 30px;
-            color: #ff85c0;
-            text-shadow: 0 0 30px rgba(255, 133, 192, 0.8);
-        }
-
-        .contact-subtitle {
-            font-size: 1.5em;
-            margin-bottom: 50px;
-            color: #ffd93d;
+            background: linear-gradient(135deg, rgba(50, 205, 50, 0.3), rgba(255, 69, 184, 0.3));
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            margin-top: 3rem;
+            box-shadow: 0 20px 60px rgba(220, 20, 60, 0.5);
+            border: 3px solid rgba(255, 215, 0, 0.6);
         }
 
         .contact-buttons {
             display: flex;
             flex-wrap: wrap;
+            gap: 2rem;
             justify-content: center;
-            gap: 30px;
-            max-width: 900px;
-            margin: 0 auto 60px;
+            margin-top: 2rem;
         }
 
         .contact-btn {
-            padding: 25px 50px;
-            font-size: 1.3em;
+            padding: 1.5rem 3rem;
+            font-size: 1.2rem;
             border: none;
-            border-radius: 60px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
+            font-weight: bold;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 15px;
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: buttonPulse 2s ease-in-out infinite;
         }
 
-        .contact-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .contact-btn:hover::before {
-            width: 300px;
-            height: 300px;
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .call-btn {
-            background: linear-gradient(135deg, #ff6b6b, #dc143c);
+            background: linear-gradient(135deg, #DC143C, #FF6347);
             color: white;
+        }
+
+        .call-btn:hover {
+            background: linear-gradient(135deg, #FF0000, #DC143C);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 40px rgba(220, 20, 60, 0.8);
         }
 
         .whatsapp-btn {
-            background: linear-gradient(135deg, #6bcf7f, #25D366);
+            background: linear-gradient(135deg, #25D366, #128C7E);
             color: white;
         }
 
-        .contact-btn:hover {
-            transform: scale(1.15) translateY(-5px);
-            box-shadow: 0 15px 50px rgba(255, 107, 107, 0.6);
+        .whatsapp-btn:hover {
+            background: linear-gradient(135deg, #128C7E, #075E54);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.8);
         }
 
         .phone-numbers {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 700px;
-            margin: 0 auto;
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.3rem;
         }
 
         .phone-numbers p {
-            margin: 15px 0;
-            font-size: 1.3em;
-            color: #ffd93d;
-        }
-
-        .phone-numbers strong {
-            color: #ff85c0;
-            font-size: 1.2em;
+            margin: 1rem 0;
+            color: #FFD700;
+            font-weight: bold;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
         }
 
         footer {
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.8), rgba(50, 205, 50, 0.6));
             text-align: center;
-            padding: 50px 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border-top: 2px solid rgba(255, 107, 107, 0.3);
+            padding: 2rem;
+            margin-top: 4rem;
+            box-shadow: 0 -10px 40px rgba(255, 215, 0, 0.5);
         }
 
-        footer p {
-            margin: 10px 0;
-            font-size: 1.2em;
-        }
-
-        .copyright {
-            color: #6bcf7f;
-        }
-
-        .footer-tagline {
-            color: #ffd93d;
-            font-style: italic;
+        .floating-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.5em; }
-            .logo { font-size: 4em; }
-            .subtitle { font-size: 1.5em; }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.8rem; }
             .services-grid { grid-template-columns: 1fr; }
-            .services-title, .gallery-title, .contact-title { font-size: 2.5em; }
-            .showcase-item { width: 200px; height: 200px; }
-            .contact-btn { padding: 20px 35px; font-size: 1.1em; }
+            .contact-buttons { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
+    <div class="floating-particles"></div>
 
     <div class="content">
         <header>
-            <div class="logo-container">
-                <div class="logo">🪬</div>
-            </div>
-            <h1>Temple Spirituel Ancestral</h1>
-            <p class="subtitle">✨ Les Grands Secrets de Nos Ancêtres ✨</p>
-            <div class="description">
-                Bienvenue dans notre temple spirituel millénaire qui regorge des grands secrets utilisés par nos ancêtres depuis des générations. Nous vous offrons des services spirituels authentiques et puissants pour transformer votre vie, résoudre vos défis les plus profonds et vous connecter avec les forces ancestrales qui guident votre destinée.
-            </div>
-            <div class="scroll-indicator">⬇️</div>
+            <h1>🕉️ Temple Spirituel Ancestral 🕉️</h1>
+            <p class="subtitle">Les Secrets Millénaires de nos Ancêtres</p>
         </header>
 
-        <section class="services-section">
-            <h2 class="services-title">✨ Nos Services Spirituels ✨</h2>
-            <p class="services-subtitle">Des solutions ancestrales pour tous vos besoins spirituels</p>
-            
+        <section class="section">
+            <div class="intro">
+                <p>Découvrez un temple spirituel qui regorge des grands secrets utilisés par nos ancêtres. Nous vous offrons des services authentiques basés sur des rituels millénaires pour transformer votre vie, protéger votre foyer et harmoniser votre destinée.</p>
+            </div>
+
+            <h2>✨ Nos Services Spirituels ✨</h2>
             <div class="services-grid">
                 <div class="service-card">
-                    <span class="service-icon">💰</span>
-                    <h3>Attirance Clientèle</h3>
-                    <p>Développez votre commerce et multipliez vos opportunités d'affaires grâce à des rituels puissants de prospérité. Attirez une clientèle fidèle et abondante qui fera prospérer votre entreprise de manière durable.</p>
+                    <h3>💼 Attirance Clientèle</h3>
+                    <p>Rituels puissants pour attirer une clientèle fidèle et prospère vers votre commerce. Augmentez vos revenus grâce aux forces ancestrales.</p>
                 </div>
-                
+
                 <div class="service-card">
-                    <span class="service-icon">💕</span>
-                    <h3>Retour d'Affection</h3>
-                    <p>Retrouvez l'amour perdu et rétablissez l'harmonie dans vos relations amoureuses. Nos rituels ancestraux éprouvés ravivent les sentiments et reconstruisent les liens affectifs les plus profonds.</p>
+                    <h3>💕 Retour d'Affection</h3>
+                    <p>Retrouvez l'amour perdu, renforcez les liens affectifs et ramenez l'être aimé grâce à des rituels d'affection éprouvés.</p>
                 </div>
-                
+
                 <div class="service-card">
-                    <span class="service-icon">🌊</span>
-                    <h3>Bains Spirituels</h3>
-                    <p>Bains de déblocage, de purification et de chance pour éliminer tous les obstacles sur votre chemin. Purifiez votre aura et attirez la fortune, la santé et le succès dans tous les domaines de votre vie.</p>
+                    <h3>🛁 Bains Spirituels</h3>
+                    <p>Bains de déblocage, de purification et de chance pour nettoyer les énergies négatives et attirer la prospérité dans votre vie.</p>
                 </div>
-                
+
                 <div class="service-card">
-                    <span class="service-icon">👶</span>
-                    <h3>Traitement de l'Infertilité</h3>
-                    <p>Solutions spirituelles efficaces pour l'infertilité masculine et féminine. Réalisez votre rêve de fonder une famille grâce à des rituels ancestraux qui favorisent la fertilité et la conception.</p>
+                    <h3>👶 Infertilité</h3>
+                    <p>Solutions traditionnelles pour l'infertilité masculine et féminine. Réalisez votre rêve de fonder une famille.</p>
                 </div>
-                
+
                 <div class="service-card">
-                    <span class="service-icon">🔮</span>
-                    <h3>Consultation Spirituelle</h3>
-                    <p>Consultations personnalisées pour éclairer votre chemin de vie. Découvrez les mystères de votre destinée, recevez des conseils avisés et prenez les meilleures décisions pour votre avenir.</p>
+                    <h3>🔮 Consultation Spirituelle</h3>
+                    <p>Consultations personnalisées pour connaître votre destinée, résoudre vos problèmes et trouver votre chemin.</p>
                 </div>
-                
+
                 <div class="service-card">
-                    <span class="service-icon">📿</span>
-                    <h3>Rituel de Fà</h3>
-                    <p>Rituels traditionnels de Fà pour la divination et la connexion profonde avec les forces spirituelles ancestrales. Obtenez des réponses précises sur votre passé, présent et futur.</p>
+                    <h3>📿 Rituel de Fà</h3>
+                    <p>Le Fà révèle votre destin et vous guide vers les bonnes décisions. Découvrez ce que l'avenir vous réserve.</p>
                 </div>
-                
+
                 <div class="service-card">
-                    <span class="service-icon">🙏</span>
-                    <h3>Installation des Divinités</h3>
-                    <p>Installation et adoration des puissantes divinités Dan, Tohossou, Sakpata et Hèbièzo pour votre protection spirituelle complète. Bénéficiez de leur guidance et de leur bénédiction au quotidien.</p>
+                    <h3>⚡ Installation des Divinités</h3>
+                    <p>Installation et adoration des divinités Dan, Tohossou, Sakpata et Hèbièzo pour une protection divine permanente.</p>
                 </div>
-                
+
                 <div class="service-card">
-                    <span class="service-icon">🏠</span>
-                    <h3>Protection des Maisons</h3>
-                    <p>Rituels de protection puissants contre les esprits maléfiques, les énergies négatives et les influences néfastes. Créez un sanctuaire de paix et de prospérité dans votre demeure.</p>
-                </div>
-                
-                <div class="service-card">
-                    <span class="service-icon">✨</span>
-                    <h3>Services Personnalisés</h3>
-                    <p>Et bien plus encore... Nous offrons de nombreux autres services spirituels adaptés à vos besoins spécifiques. Contactez-nous pour découvrir comment nous pouvons vous aider dans votre parcours spirituel.</p>
+                    <h3>🏠 Protection des Maisons</h3>
+                    <p>Rituels de protection puissants contre les esprits maléfiques, les mauvais sorts et les énergies négatives.</p>
                 </div>
             </div>
-        </section>
 
-        <section class="gallery-section">
-            <h2 class="gallery-title">🖼️ Notre Galerie Spirituelle 🖼️</h2>
-            <div class="image-showcase">
-                <div class="showcase-item" onclick="alert('Image 1: Symboles Ancestraux')">
-                    <div class="showcase-icon">🎨</div>
-                    <div class="showcase-label">1.png</div>
-                </div>
-                <div class="showcase-item" onclick="alert('Image 2: Rituels Sacrés')">
-                    <div class="showcase-icon">🎭</div>
-                    <div class="showcase-label">2.png</div>
-                </div>
-                <div class="showcase-item" onclick="alert('Image 3: Divinités')">
-                    <div class="showcase-icon">👁️</div>
-                    <div class="showcase-label">3.png</div>
-                </div>
-                <div class="showcase-item" onclick="alert('Image 4: Offrandes')">
-                    <div class="showcase-icon">🕯️</div>
-                    <div class="showcase-label">4.png</div>
-                </div>
-                <div class="showcase-item" onclick="alert('Image 5: Cérémonies')">
-                    <div class="showcase-icon">⚡</div>
-                    <div class="showcase-label">5.png</div>
-                </div>
-            </div>
-        </section>
+            <h2>🎨 Galerie de nos Services 🎨</h2>
+            <div class="images-gallery" id="imageGallery"></div>
 
-        <section class="contact-section">
-            <h2 class="contact-title">📞 Contactez-Nous Maintenant</h2>
-            <p class="contact-subtitle">Nous sommes disponibles pour répondre à toutes vos questions</p>
-            
-            <div class="contact-buttons">
-                <a href="tel:+22901414627228" class="contact-btn call-btn">
-                    <span>📞</span>
-                    <span>Appeler Maintenant</span>
-                </a>
-                <a href="https://wa.me/2290196482226" target="_blank" class="contact-btn whatsapp-btn">
-                    <span>💬</span>
-                    <span>WhatsApp 1</span>
-                </a>
-                <a href="https://wa.me/2290195552252" target="_blank" class="contact-btn whatsapp-btn">
-                    <span>💬</span>
-                    <span>WhatsApp 2</span>
-                </a>
-            </div>
+            <div class="contact-section">
+                <h2>📞 Contactez-Nous 📞</h2>
+                
+                <div class="contact-buttons">
+                    <a href="tel:+22901414627228" class="contact-btn call-btn">
+                        📞 Appeler Maintenant
+                    </a>
+                    <a href="https://wa.me/2290196482226" target="_blank" class="contact-btn whatsapp-btn">
+                        💬 WhatsApp 1
+                    </a>
+                    <a href="https://wa.me/2290195552252" target="_blank" class="contact-btn whatsapp-btn">
+                        💬 WhatsApp 2
+                    </a>
+                </div>
 
-            <div class="phone-numbers">
-                <p><strong>📱 Numéro d'Appel:</strong></p>
-                <p>+229 01 41 46 27 28</p>
-                <br>
-                <p><strong>💬 Numéros WhatsApp:</strong></p>
-                <p>+229 01 96 48 22 26</p>
-                <p>+229 01 95 55 22 52</p>
+                <div class="phone-numbers">
+                    <p>📱 Appels : +229 01 41 46 27 28</p>
+                    <p>💬 WhatsApp : +229 01 96 48 22 26</p>
+                    <p>💬 WhatsApp : +229 01 95 55 22 52</p>
+                </div>
             </div>
         </section>
 
         <footer>
-            <p class="copyright">© 2024 Temple Spirituel Ancestral - Tous droits réservés</p>
-            <p class="footer-tagline">✨ Les Secrets Ancestraux à Votre Service ✨</p>
-            <p>🪬 Sagesse • Protection • Prospérité 🕉️</p>
+            <p>&copy; 2025 Temple Spirituel Ancestral - Sagesse et Protection Millénaire</p>
         </footer>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Three.js Scene Setup
+        // Three.js Background Animation
+        const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x0a0a0a, 0.015);
-        
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x0a0a0a, 1);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        container.appendChild(renderer.domElement);
 
-        // Enhanced Lighting System
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        // Create mystical temple geometry
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0xFFD700,
+            emissive: 0xDC143C,
+            wireframe: true
+        });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        // Add floating spheres
+        const spheres = [];
+        for (let i = 0; i < 50; i++) {
+            const sphereGeom = new THREE.SphereGeometry(Math.random() * 2, 16, 16);
+            const sphereMat = new THREE.MeshPhongMaterial({
+                color: [0xDC143C, 0xFFD700, 0x32CD32, 0xFF69B4][Math.floor(Math.random() * 4)],
+                transparent: true,
+                opacity: 0.6
+            });
+            const sphere = new THREE.Mesh(sphereGeom, sphereMat);
+            sphere.position.set(
+                (Math.random() - 0.5) * 100,
+                (Math.random() - 0.5) * 100,
+                (Math.random() - 0.5) * 100
+            );
+            spheres.push(sphere);
+            scene.add(sphere);
+        }
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xFFD700, 0.5);
         scene.add(ambientLight);
 
-        const colors = [0xff6b6b, 0xffd93d, 0x6bcf7f, 0xff85c0];
-        const lights = [];
+        const pointLight = new THREE.PointLight(0xDC143C, 1, 100);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
 
-        colors.forEach((color, index) => {
-            const light = new THREE.PointLight(color, 1.5, 100);
-            light.position.set(
-                Math.cos(index * Math.PI / 2) * 20,
-                Math.sin(index * Math.PI / 2) * 20,
-                10
-            );
-            lights.push(light);
-            scene.add(light);
-        });
+        const pointLight2 = new THREE.PointLight(0x32CD32, 1, 100);
+        pointLight2.position.set(-10, -10, -10);
+        scene.add(pointLight2);
 
-        // Particle System - More particles for richer effect
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particleCount = 500;
-        const positions = new Float32Array(particleCount * 3);
-        const particleColors = new Float32Array(particleCount * 3);
-        const velocities = [];
+        camera.position.z = 50;
 
-        for (let i = 0; i < particleCount; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 100;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
-
-            const color = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
-            particleColors[i * 3] = color.r;
-            particleColors[i * 3 + 1] = color.g;
-            particleColors[i * 3 + 2] = color.b;
-
-            velocities.push({
-                x: (Math.random() - 0.5) * 0.05,
-                y: (Math.random() - 0.5) * 0.05,
-                z: (Math.random() - 0.5) * 0.05
-            });
-        }
-
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
-
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.5,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-
-        const particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particleSystem);
-
-        // Geometric Shapes - Temple Elements
-        const geometries = [
-            new THREE.TorusGeometry(3, 0.8, 16, 100),
-            new THREE.OctahedronGeometry(3, 0),
-            new THREE.TetrahedronGeometry(3, 0),
-            new THREE.IcosahedronGeometry(2.5, 0)
-        ];
-
-        const shapes = [];
-        geometries.forEach((geometry, index) => {
-            const material = new THREE.MeshStandardMaterial({
-                color: colors[index],
-                wireframe: true,
-                transparent: true,
-                opacity: 0.4,
-                emissive: colors[index],
-                emissiveIntensity: 0.3
-            });
-            
-            const mesh = new THREE.Mesh(geometry, material);
-            const angle = (index * Math.PI * 2) / geometries.length;
-            mesh.position.set(
-                Math.cos(angle) * 15,
-                Math.sin(angle) * 10,
-                -5
-            );
-            shapes.push(mesh);
-            scene.add(mesh);
-        });
-
-        // Create rotating rings
-        const rings = [];
-        for (let i = 0; i < 3; i++) {
-            const ringGeometry = new THREE.TorusGeometry(10 + i * 5, 0.3, 16, 100);
-            const ringMaterial = new THREE.MeshStandardMaterial({
-                color: colors[i],
-                transparent: true,
-                opacity: 0.2,
-                wireframe: true
-            });
-            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-            ring.rotation.x = Math.PI / 2;
-            rings.push(ring);
-            scene.add(ring);
-        }
-
-        camera.position.z = 30;
-        camera.position.y = 5;
-
-        // Animation Variables
-        let time = 0;
-        const clock = new THREE.Clock();
-
-        // Animation Loop
+        // Animation
         function animate() {
             requestAnimationFrame(animate);
-            const delta = clock.getDelta();
-            time += delta;
 
-            // Animate particles
-            const positions = particleSystem.geometry.attributes.position.array;
-            for (let i = 0; i < particleCount; i++) {
-                positions[i * 3] += velocities[i].x;
-                positions[i * 3 + 1] += velocities[i].y;
-                positions[i * 3 + 2] += velocities[i].z;
+            torusKnot.rotation.x += 0.005;
+            torusKnot.rotation.y += 0.008;
 
-                // Boundary check and reverse direction
-                if (Math.abs(positions[i * 3]) > 50) velocities[i].x *= -1;
-                if (Math.abs(positions[i * 3 + 1]) > 50) velocities[i].y *= -1;
-                if (Math.abs(positions[i * 3 + 2]) > 50) velocities[i].z *= -1;
-            }
-            particleSystem.geometry.attributes.position.needsUpdate = true;
-
-            // Rotate particle system
-            particleSystem.rotation.y += 0.001;
-            particleSystem.rotation.x += 0.0005;
-
-            // Animate geometric shapes
-            shapes.forEach((shape, index) => {
-                shape.rotation.x += 0.01 * (index + 1);
-                shape.rotation.y += 0.015 * (index + 1);
-                shape.position.y += Math.sin(time * 2 + index) * 0.05;
-                
-                // Pulsing effect
-                const scale = 1 + Math.sin(time * 3 + index) * 0.1;
-                shape.scale.set(scale, scale, scale);
+            spheres.forEach((sphere, i) => {
+                sphere.rotation.x += 0.01;
+                sphere.rotation.y += 0.01;
+                sphere.position.y += Math.sin(Date.now() * 0.001 + i) * 0.05;
             });
-
-            // Animate rings
-            rings.forEach((ring, index) => {
-                ring.rotation.z += 0.005 * (index + 1);
-                ring.position.y = Math.sin(time + index * Math.PI / 3) * 5;
-            });
-
-            // Animate lights in circular motion
-            lights.forEach((light, index) => {
-                const angle = time * 0.5 + (index * Math.PI * 2) / lights.length;
-                light.position.x = Math.cos(angle) * 25;
-                light.position.z = Math.sin(angle) * 25;
-                light.position.y = Math.sin(time + index) * 15;
-                
-                // Pulsing intensity
-                light.intensity = 1.5 + Math.sin(time * 2 + index) * 0.5;
-            });
-
-            // Camera gentle movement
-            camera.position.x = Math.sin(time * 0.1) * 2;
-            camera.position.y = 5 + Math.cos(time * 0.15) * 2;
-            camera.lookAt(scene.position);
 
             renderer.render(scene, camera);
         }
 
         animate();
 
-        // Responsive handling
+        // Responsive
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Smooth scroll behavior
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // Scroll indicator animation
-        const scrollIndicator = document.querySelector('.scroll-indicator');
-        if (scrollIndicator) {
-            scrollIndicator.addEventListener('click', () => {
-                document.querySelector('.services-section').scrollIntoView({ behavior: 'smooth' });
-            });
-        }
-
-        // Parallax effect on scroll
-        let scrollPosition = 0;
-        window.addEventListener('scroll', () => {
-            scrollPosition = window.pageYOffset;
-            
-            // Move camera based on scroll
-            camera.position.y = 5 + (scrollPosition * 0.01);
-            
-            // Adjust particle system rotation based on scroll
-            particleSystem.rotation.y = scrollPosition * 0.0005;
-        });
-
-        // Mouse interaction - particles follow cursor
-        let mouseX = 0;
-        let mouseY = 0;
-        
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-        });
-
-        // Apply mouse movement to camera
-        function updateCameraPosition() {
-            camera.position.x += (mouseX * 3 - camera.position.x) * 0.05;
-            camera.position.y += (mouseY * 3 + 5 - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
-        }
-
-        // Enhanced animation loop with mouse interaction
-        function animateWithMouse() {
-            requestAnimationFrame(animateWithMouse);
-            updateCameraPosition();
-        }
-        animateWithMouse();
-
-        // Add floating images with real image references
-        const imageContainer = document.createElement('div');
-        imageContainer.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        `;
-        document.body.appendChild(imageContainer);
-
+        // Dynamic Image Loading
+        const imageGallery = document.getElementById('imageGallery');
         const imageNames = ['1.png', '2.png', '3.png', '4.png', '5.png'];
-        const floatingImages = [];
-
+        
         imageNames.forEach((imageName, index) => {
-            const imgWrapper = document.createElement('div');
-            imgWrapper.style.cssText = `
-                position: absolute;
-                width: 120px;
-                height: 120px;
-                background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(255, 215, 0, 0.3));
-                border-radius: 15px;
-                border: 2px solid rgba(255, 215, 0, 0.6);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 2.5em;
-                box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
-                backdrop-filter: blur(10px);
-                transition: all 0.3s ease;
-            `;
+            const container = document.createElement('div');
+            container.className = 'image-container';
             
-            const iconMap = ['🎨', '🎭', '👁️', '🕯️', '⚡'];
-            imgWrapper.innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 1.2em;">${iconMap[index]}</div>
-                    <div style="font-size: 0.4em; color: #ffd93d; margin-top: 5px;">${imageName}</div>
-                </div>
-            `;
+            const img = document.createElement('img');
+            img.src = `images/${imageName}`;
+            img.alt = `Service ${index + 1}`;
+            img.onerror = function() {
+                this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23DC143C" width="400" height="300"/%3E%3Ctext fill="%23FFD700" font-size="24" font-family="Arial" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EService ' + (index + 1) + '%3C/text%3E%3C/svg%3E';
+            };
             
-            // Random initial position
-            const startX = Math.random() * (window.innerWidth - 120);
-            const startY = Math.random() * (window.innerHeight - 120);
-            imgWrapper.style.left = startX + 'px';
-            imgWrapper.style.top = startY + 'px';
-            
-            imageContainer.appendChild(imgWrapper);
-            
-            floatingImages.push({
-                element: imgWrapper,
-                x: startX,
-                y: startY,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                rotation: 0,
-                rotationSpeed: (Math.random() - 0.5) * 2
-            });
+            container.appendChild(img);
+            imageGallery.appendChild(container);
         });
 
-        // Animate floating images
-        function animateFloatingImages() {
-            floatingImages.forEach(img => {
-                // Update position
-                img.x += img.vx;
-                img.y += img.vy;
-                
-                // Bounce off edges
-                if (img.x <= 0 || img.x >= window.innerWidth - 120) {
-                    img.vx *= -1;
-                    img.x = Math.max(0, Math.min(img.x, window.innerWidth - 120));
-                }
-                if (img.y <= 0 || img.y >= window.innerHeight - 120) {
-                    img.vy *= -1;
-                    img.y = Math.max(0, Math.min(img.y, window.innerHeight - 120));
-                }
-                
-                // Update rotation
-                img.rotation += img.rotationSpeed;
-                
-                // Apply transforms
-                img.element.style.left = img.x + 'px';
-                img.element.style.top = img.y + 'px';
-                img.element.style.transform = `rotate(${img.rotation}deg) scale(${1 + Math.sin(time * 2) * 0.1})`;
-            });
-            
-            requestAnimationFrame(animateFloatingImages);
+        // Floating particles effect
+        const particlesContainer = document.querySelector('.floating-particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = Math.random() * 5 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = ['#DC143C', '#FFD700', '#32CD32', '#FF69B4'][Math.floor(Math.random() * 4)];
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.opacity = Math.random() * 0.5 + 0.2;
+            particle.style.animation = `float ${Math.random() * 10 + 10}s ease-in-out infinite`;
+            particlesContainer.appendChild(particle);
         }
-        animateFloatingImages();
-
-        // Hover effect on floating images
-        floatingImages.forEach(img => {
-            img.element.addEventListener('mouseenter', () => {
-                img.element.style.transform = `rotate(${img.rotation}deg) scale(1.3)`;
-                img.element.style.boxShadow = '0 20px 60px rgba(255, 215, 0, 0.8)';
-                img.element.style.borderColor = '#ff6b6b';
-            });
-            
-            img.element.addEventListener('mouseleave', () => {
-                img.element.style.transform = `rotate(${img.rotation}deg) scale(1)`;
-                img.element.style.boxShadow = '0 10px 40px rgba(255, 107, 107, 0.4)';
-                img.element.style.borderColor = 'rgba(255, 215, 0, 0.6)';
-            });
-        });
-
-        // Service cards entrance animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }, index * 100);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(50px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Add sparkle effect on service cards
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                const sparkle = document.createElement('div');
-                sparkle.innerHTML = '✨';
-                sparkle.style.cssText = `
-                    position: absolute;
-                    font-size: 2em;
-                    pointer-events: none;
-                    animation: sparkleFloat 1s ease-out forwards;
-                    left: ${Math.random() * 100}%;
-                    top: ${Math.random() * 100}%;
-                `;
-                card.appendChild(sparkle);
-                
-                setTimeout(() => sparkle.remove(), 1000);
-            });
-        });
-
-        // Add CSS animation for sparkles
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes sparkleFloat {
-                0% {
-                    transform: translateY(0) scale(0);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(-50px) scale(1.5);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Console message
-        console.log('%c🪬 Temple Spirituel Ancestral 🪬', 'color: #ffd93d; font-size: 24px; font-weight: bold;');
-        console.log('%cBienvenue dans notre espace spirituel sacré', 'color: #6bcf7f; font-size: 16px;');
     </script>
 </body>
-        </html>
+</html>
